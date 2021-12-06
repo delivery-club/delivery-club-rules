@@ -1,4 +1,4 @@
-package camelCaseNaming
+package commonCamelCaseNaming
 
 const (
 	snake_case_grouped    = "foo" // want `use camelCase naming strategy`

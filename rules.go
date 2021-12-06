@@ -73,3 +73,15 @@ func camelCaseNaming(m dsl.Matcher) {
 		Report("use camelCase naming strategy").
 		At(m["x"])
 }
+
+func notInformativePackageNaming(m dsl.Matcher) {
+	m.Match(`package $x`).
+		Where(
+			m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$)`) ||
+				m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$)`) ||
+				m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$)`) ||
+				m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$)`),
+		).
+		Report("don't use general names to package naming").
+		At(m["x"])
+}
