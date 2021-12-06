@@ -7,24 +7,19 @@ import (
 func unusedFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
-	m.Match(`fmt.Sprintf($f)`,
-		`fmt.Printf($f)`,
-		`fmt.Fscanf($_, $f)`,
-		`fmt.Fprintf($_, $f)`,
-		`fmt.Scanf($f)`,
-		`fmt.Sscanf($_, $f)`,
-		`errors.WithMessagef($_, $f)`,
-		`errors.Wrapf($_, $f)`,
-	).
-		Where(m["f"].Text.Matches(".*")).
+	m.Match(`fmt.Sprintf($f)`, `errors.WithMessagef($_, $f)`, `errors.Wrapf($_, $f)`).
 		Report(`use function alternative without formatting`)
+}
 
-	m.Match(`fmt.Errorf($f)`,
-		`errors.Errorf($f)`,
-	).
-		Where(m["f"].Text.Matches(".*")).
+func undefinedFormatting(m dsl.Matcher) {
+	m.Match(`fmt.Errorf($f)`, `errors.Errorf($f)`).
+		Where(!m["f"].Const).
 		Suggest("errors.New($f)").
-		Report("use errors.New instead")
+		Report(`use errors.New($f) or fmt.Errorf("%s", $f) instead`)
+
+	m.Match(`fmt.Errorf($f($*_))`, `errors.Errorf($f($*_))`).
+		Suggest("errors.New($f($*_))").
+		Report(`use errors.New($f($*_)) or fmt.Errorf("%s", $f($*_)) instead`)
 }
 
 // from https://github.com/quasilyte/uber-rules
