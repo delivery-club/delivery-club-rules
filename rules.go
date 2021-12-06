@@ -97,3 +97,10 @@ func getterNaming(m dsl.Matcher) {
 		Report(`don't use 'get' in getter functions`).
 		At(m["name"])
 }
+
+func oneMethodInterfaceNaming(m dsl.Matcher) {
+	m.Match(`type $name interface{ $method ($*_) $*_ }`).
+		Where(!m["name"].Text.Matches(`\wer$`)).
+		Report("change interface name to $method + 'er' pattern").
+		At(m["name"])
+}
