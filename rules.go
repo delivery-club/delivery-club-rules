@@ -59,6 +59,8 @@ func rangeExprCopy(m dsl.Matcher) {
 func camelCaseNaming(m dsl.Matcher) {
 	m.Match(
 		`func $x($*_) $*_ { $*_ }`,
+		`func ($_) $x($*_) $*_ { $*_ }`,
+		`func ($_ $_) $x($*_) $*_ { $*_ }`,
 		`const $x = $_`, `const $x $_ = $_`,
 		`const ($x = $_; $*_)`,          // workaround for https://github.com/quasilyte/go-ruleguard/issues/160
 		`const ($_ = $_; $x = $_; $*_)`, // wip: not working yet because previous rule

@@ -104,3 +104,6 @@ func fooFunc(i int) {
 	_ = camelCaseGroupedVarFull
 	_ = camelCaseGroupedVarFull2
 }
+
+func (camelCaseType) snake_case_method() string                 { return "" } // want `use camelCase naming strategy`
+func (c camelCaseType) snake_case_method_with_reciever() string { return "" } // want `use camelCase naming strategy`
