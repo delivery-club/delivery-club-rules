@@ -56,6 +56,13 @@ func rangeExprCopy(m dsl.Matcher) {
 		Suggest(`&$x`)
 }
 
+// from https://github.com/quasilyte/uber-rules
+func ifacePtr(m dsl.Matcher) {
+	m.Match(`*$x`).
+		Where(m["x"].Type.Underlying().Is(`interface{ $*_ }`)).
+		Report(`don't use pointers to an interface`)
+}
+
 func camelCaseNaming(m dsl.Matcher) {
 	m.Match(
 		`func $x($*_) $*_ { $*_ }`,
