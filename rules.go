@@ -77,10 +77,10 @@ func camelCaseNaming(m dsl.Matcher) {
 func notInformativePackageNaming(m dsl.Matcher) {
 	m.Match(`package $x`).
 		Where(
-			m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$)`) ||
-				m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$)`) ||
-				m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$)`) ||
-				m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$)`),
+			m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
+				m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$|\d)`) ||
+				m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$|\d)`) ||
+				m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$|\d)`),
 		).
 		Report("don't use general names to package naming").
 		At(m["x"])
@@ -93,7 +93,7 @@ func getterNaming(m dsl.Matcher) {
 		`func ($x $_) $name($*_) $*_ { return $_($x) }`,
 		`func ($x $_) $name($*_) $*_ { return $_(*$x) }`,
 	).
-		Where(m["name"].Text.Matches(`(^g|G|_(g|G))et([A-Z]|$|_)`)).
+		Where(m["name"].Text.Matches(`(^g|G|_(g|G))et([A-Z]|$|_|\d)`)).
 		Report(`don't use 'get' in getter functions`).
 		At(m["name"])
 }
@@ -102,5 +102,12 @@ func oneMethodInterfaceNaming(m dsl.Matcher) {
 	m.Match(`type $name interface{ $method ($*_) $*_ }`).
 		Where(!m["name"].Text.Matches(`\wer$`)).
 		Report("change interface name to $method + 'er' pattern").
+		At(m["name"])
+}
+
+func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
+	m.Match(`type $name interface{ $*_ }`).
+		Where(m["name"].Text.Matches(`(^i|I|_(i|I))nterface([A-Z]|_|$|\d)`)).
+		Report(`don't use 'interface' word' in interface declaration'`).
 		At(m["name"])
 }
