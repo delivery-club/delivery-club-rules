@@ -85,3 +85,15 @@ func notInformativePackageNaming(m dsl.Matcher) {
 		Report("don't use general names to package naming").
 		At(m["x"])
 }
+
+func getterNaming(m dsl.Matcher) {
+	m.Match(
+		`func ($x $_) $name($*_) $*_ { return $x.$_ }`,
+		`func ($x $_) $name($*_) $*_ { return $_($x.$_) }`,
+		`func ($x $_) $name($*_) $*_ { return $_($x) }`,
+		`func ($x $_) $name($*_) $*_ { return $_(*$x) }`,
+	).
+		Where(m["name"].Text.Matches(`(^g|G|_(g|G))et([A-Z]|$|_)`)).
+		Report(`don't use 'get' in getter functions`).
+		At(m["name"])
+}
