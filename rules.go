@@ -7,19 +7,8 @@ import (
 func unusedFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
-	m.Match(`fmt.Sprintf($f)`, `errors.WithMessagef($_, $f)`, `errors.Wrapf($_, $f)`).
+	m.Match(`fmt.Sprintf($_)`, `errors.WithMessagef($_, $_)`, `errors.Wrapf($_, $_)`, `errors.Errorf($_)`).
 		Report(`use function alternative without formatting`)
-}
-
-func undefinedFormatting(m dsl.Matcher) {
-	m.Match(`fmt.Errorf($f)`, `errors.Errorf($f)`).
-		Where(!m["f"].Const).
-		Suggest("errors.New($f)").
-		Report(`use errors.New($f) or fmt.Errorf("%s", $f) instead`)
-
-	m.Match(`fmt.Errorf($f($*_))`, `errors.Errorf($f($*_))`).
-		Suggest("errors.New($f($*_))").
-		Report(`use errors.New($f($*_)) or fmt.Errorf("%s", $f($*_)) instead`)
 }
 
 // from https://github.com/quasilyte/uber-rules
