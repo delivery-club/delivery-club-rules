@@ -114,3 +114,52 @@ func simplifyErrorReturn(m dsl.Matcher) {
 		Suggest(`$*_, err := $f($args); return err`).
 		At(m["f"])
 }
+
+func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
+	m.Import("github.com/pkg/errors")
+
+	m.Match(
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return errors.WithMessagef($err, $*methodArgs)`).
+		At(m["f"])
+
+	m.Match(
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithMessage($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessage($err, $*methodArgs) }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return errors.WithMessage($err, $*methodArgs)`).
+		At(m["f"])
+
+	m.Match(
+		`if $*_, $err = $f($*args); $err != nil { return errors.Wrap($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.Wrap($err, $*methodArgs) }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return errors.Wrap($err, $*methodArgs)`).
+		At(m["f"])
+
+	m.Match(
+		`if $*_, $err = $f($*args); $err != nil { return errors.Wrapf($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.Wrapf($err, $*methodArgs) }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return errors.Wrapf($err, $*methodArgs)`).
+		At(m["f"])
+
+	m.Match(
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithStack($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithStack($err, $*methodArgs) }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return errors.WithStack($err, $*methodArgs)`).
+		At(m["f"])
+}
