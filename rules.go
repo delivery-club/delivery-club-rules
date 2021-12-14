@@ -104,3 +104,13 @@ func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
 		Report(`don't use 'interface' word' in interface declaration'`).
 		At(m["name"])
 }
+
+func simplifyErrorReturn(m dsl.Matcher) {
+	m.Match(`if $*_, $err = $f($*args); $err != nil { return $err }; return nil`,
+		`if $*_, $err := $f($*args); $err != nil { return $err }; return nil`,
+	).
+		Where(m["err"].Type.Implements("error")).
+		Report(`may be simplified to return error without if statement`).
+		Suggest(`$*_, err := $f($args); return err`).
+		At(m["f"])
+}
