@@ -51,3 +51,33 @@ func myFuncGood() (string, error) {
 
 	return str, nil
 }
+
+func myFuncSecond() error {
+	_, err := myBarSecond() // want `may be simplified to return error without if statement`
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func myFuncThree() error {
+	if true {
+		var err error
+
+		_, err = myBarSecond() // want `may be simplified to return error without if statement`
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	var err error
+	err = myBar() // want `may be simplified to return error without if statement`
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
