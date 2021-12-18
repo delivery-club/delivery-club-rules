@@ -4,6 +4,8 @@ import (
 	"github.com/quasilyte/go-ruleguard/dsl"
 )
 
+var Bundle = dsl.Bundle{}
+
 func unusedFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
