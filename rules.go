@@ -47,6 +47,7 @@ func ifacePtr(m dsl.Matcher) {
 		Report(`don't use pointers to an interface`)
 }
 
+//TODO: add rule cases
 func camelCaseNaming(m dsl.Matcher) {
 	m.Match(
 		`func $x($*_) $*_ { $*_ }`,
@@ -180,6 +181,9 @@ func returnConcreteInsteadInterface(m dsl.Matcher) {
 	m.Match(`func $name($*_) $arg { $*_ }`,
 		`func ($_ $_) $name($*_) $arg { $*_ }`,
 		`func ($_) $name($*_) $arg { $*_ }`,
+		`func $name($*_) ($arg, $_) { $*_ }`,         //wip: not working yet
+		`func ($_ $_) $name($*_) ($arg, $_) { $*_ }`, //wip: not working yet
+		`func ($_) $name($*_) ($arg, $_) { $*_ }`,    //wip: not working yet
 	).
 		Where(m["name"].Text.Matches(`^[A-Z]`) &&
 			(m["arg"].Type.Underlying().Is(`interface{ $*_ }`) && !m["arg"].Type.Is(`error`))).
