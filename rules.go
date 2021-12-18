@@ -175,3 +175,14 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		Suggest(`$*_, err := $f($args); return errors.WithStack($err, $methodArgs)`).
 		At(m["f"])
 }
+
+func returnConcreteInsteadInterface(m dsl.Matcher) {
+	m.Match(`func $name($*_) $arg { $*_ }`,
+		`func ($_ $_) $name($*_) $arg { $*_ }`,
+		`func ($_) $name($*_) $arg { $*_ }`,
+	).
+		Where(m["name"].Text.Matches(`^[A-Z]`) &&
+			(m["arg"].Type.Underlying().Is(`interface{ $*_ }`) && !m["arg"].Type.Is(`error`))).
+		Report(`in exported functions return concrete type instead of interface`).
+		At(m["name"])
+}
