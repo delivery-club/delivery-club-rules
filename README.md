@@ -12,7 +12,7 @@ Delivery club go rules linter
       go get -v -u github.com/quasilyte/go-ruleguard/dsl
       go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard
       ```
-2. Copy rules.go file to your project
+2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
    1. Like explicit check:
       ``` shell
@@ -31,7 +31,7 @@ Delivery club go rules linter
              - ruleguard
            settings:
              ruleguard:
-               rules: "rules.go"
+               rules: "YourDir/rules.go"
        ```
    3. Like file watcher in Goland IDE (will work for golangci-lint >v1.27.0):
       1. add golangci-lint as `File Watcher` in IDE (Preferences -> Tools -> File Watchers -> Add)

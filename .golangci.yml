@@ -1,4 +1,6 @@
 linters:
+  disable:
+    - typecheck
   enable:
     - gocritic
 linters-settings:
@@ -7,4 +9,4 @@ linters-settings:
       - ruleguard
     settings:
       ruleguard:
-        rules: "rules.go"
+        rules: "example/rules.go"
