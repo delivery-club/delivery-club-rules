@@ -1,5 +1,9 @@
 package returnConcreteInsteadInterface
 
+import (
+	"context"
+)
+
 type MyIface interface{}
 type s struct{}
 
@@ -44,6 +48,10 @@ func MyFuncError() error {
 }
 
 func (s *s) MyFuncErrorWithReceiver() error {
+	return nil
+}
+
+func (*s) MyFuncNewContext() context.Context {
 	return nil
 }
 
