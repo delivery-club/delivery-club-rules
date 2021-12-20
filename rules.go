@@ -113,6 +113,10 @@ func simplifyErrorReturn(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return $err }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return $err }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return $err }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return $err }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return $err }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return $err }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return $err }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).
@@ -128,6 +132,10 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).
@@ -139,6 +147,10 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessage($err, $*methodArgs) }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithMessage($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithMessage($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return errors.WithMessagef($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).
@@ -150,6 +162,10 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return errors.Wrap($err, $*methodArgs) }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return errors.Wrap($err, $*methodArgs) }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return errors.Wrap($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return errors.Wrap($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.Wrap($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return errors.Wrap($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return errors.Wrap($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).
@@ -161,6 +177,10 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return errors.Wrapf($err, $*methodArgs) }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return errors.Wrapf($err, $*methodArgs) }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return errors.Wrapf($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return errors.Wrapf($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.Wrapf($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return errors.Wrapf($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return errors.Wrapf($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).
@@ -172,6 +192,10 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 		`if $*_, $err := $f($*args); $err != nil { return errors.WithStack($err, $*methodArgs) }; return nil`,
 		`$*_, $err = $f($*args); if $err != nil { return errors.WithStack($err, $*methodArgs) }; return nil`,
 		`$*_, $err := $f($*args); if $err != nil { return errors.WithStack($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $f($*args); $err != nil { return errors.WithStack($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $f($*args); $err != nil { return errors.WithStack($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $f($*args); if $err != nil { return errors.WithStack($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $f($*args); if $err != nil { return errors.WithStack($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`).

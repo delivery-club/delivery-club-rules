@@ -40,7 +40,18 @@ Delivery club go rules linter
       ```
       run $FileDir$ --config=$ProjectFileDir$/.golangci.yml
       ```
+### How to update to new rules version:
+   1. update rules version in your go.mod file
+   2. download new rules version:
+      ```shell
+      go get github.com/delivery-club/delivery-club-rules@newVersion
+      ```
+   3. if you using golangci-lint update cache:
+      ```shell
+      golangci-lint cache clean
+      ```
 
 ### How to add new checks:
 
-Ruleguard tour for newbees: https://go-ruleguard.github.io/by-example
+1. Ruleguard tour for newbees: https://go-ruleguard.github.io/by-example
+2. Fork repo && open PR :D
