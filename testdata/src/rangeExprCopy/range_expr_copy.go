@@ -23,6 +23,30 @@ func warnings() {
 			_ = x
 		}
 	}
+
+	var x byte
+	{
+		var xs [777]byte
+		for _, x = range xs { // want "copy of xs can be avoided with &xs"
+			_ = x
+		}
+	}
+
+	{
+		var foo struct {
+			arr [768]byte
+		}
+		for _, x = range foo.arr { // want "copy of foo.arr can be avoided with &foo.arr"
+			_ = x
+		}
+	}
+
+	{
+		xsList := make([][512]byte, 1)
+		for _, x = range xsList[0] { // want `\Qcopy of xsList[0] can be avoided with &xsList[0]`
+			_ = x
+		}
+	}
 }
 
 func returnArray() [20]int {

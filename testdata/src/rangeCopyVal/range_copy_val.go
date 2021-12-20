@@ -14,6 +14,11 @@ func bigCopy(xs []bigObject) int32 {
 	for _, x := range xs { // want `\Qeach iteration copies more than 256 bytes (consider pointers or indexing)`
 		v += x.x
 	}
+
+	var x bigObject
+	for _, x = range xs { // want `\Qeach iteration copies more than 256 bytes (consider pointers or indexing)`
+		v += x.x
+	}
 	return v
 }
 
