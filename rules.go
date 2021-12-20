@@ -221,3 +221,30 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 //		Report(`in exported functions return concrete type instead of interface`).
 //		At(m["name"])
 //}
+
+func deferInLoop(m dsl.Matcher) {
+	m.Match(
+		`for $*_; $*_; $*_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; defer $_($*args); $*_ }`,
+
+		`for { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for { $*_; defer $_($*args); $*_ }`,
+
+		`for $_, $_ := range $_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; defer $_($*args); $*_ }`,
+
+		`for $_, $_ = range $_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; defer $_($*args); $*_ }`,
+
+		`for $_ := range $_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for $_ := range $_ { $*_; defer $_($*args); $*_ }`,
+
+		`for $_ = range $_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for $_ = range $_ { $*_; defer $_($*args); $*_ }`,
+
+		`for range $_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
+		`for range $_ { $*_; defer $_($*args); $*_ }`,
+	).
+		Report(`Possible resource leak, 'defer' is called in the 'for' loop`).
+		At(m["args"])
+}
