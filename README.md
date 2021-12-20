@@ -19,7 +19,7 @@ Delivery club go rules linter
       ruleguard -rules rules.go ./...
       ```
 
-   2. Or add like another one check in golangci-lint:
+   2. Or add like another one check in golangci-lint (will work for golangci-lint >v1.27.0):
 
        ``` yaml
        linters:
