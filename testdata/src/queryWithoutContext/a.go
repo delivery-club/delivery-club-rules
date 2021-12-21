@@ -1,6 +1,7 @@
 package queryWithoutContext
 
 import (
+	"context"
 	"database/sql"
 )
 
@@ -23,12 +24,12 @@ func warnings() {
 
 	d := decorator{db}
 
-	d.Query(`SELECT 1`)    // TODO: want `don't send query to external storage without context`
-	d.QueryRow(`SELECT 1`) // TODO: want `don't send query to external storage without context`
-	d.Exec(`SELECT 1`)     // TODO: want `don't send query to external storage without context`
-	d.Prepare(`SELECT 1`)  // TODO: want `don't send query to external storage without context`
-	d.Ping()               // TODO: want `don't send query to external storage without context`
-	d.Begin()              // TODO: want `don't send query to external storage without context`
+	d.Query(`SELECT 1`)    // want `don't send query to external storage without context`
+	d.QueryRow(`SELECT 1`) // want `don't send query to external storage without context`
+	d.Exec(`SELECT 1`)     // want `don't send query to external storage without context`
+	d.Prepare(`SELECT 1`)  // want `don't send query to external storage without context`
+	d.Ping()               // want `don't send query to external storage without context`
+	d.Begin()              // want `don't send query to external storage without context`
 
 	dw := decoratorWithParams{d: db}
 	dw.d.Query(`SELECT 1`)    // want `don't send query to external storage without context`
@@ -37,4 +38,23 @@ func warnings() {
 	dw.d.Prepare(`SELECT 1`)  // want `don't send query to external storage without context`
 	dw.d.Ping()               // want `don't send query to external storage without context`
 	dw.d.Begin()              // want `don't send query to external storage without context`
+
+	query := `SELECT 1`
+	tx, _ := d.Begin()   // want `don't send query to external storage without context`
+	tx.QueryRow(query)   // want `don't send query to external storage without context`
+	tx.Query(`SELECT 1`) // want `don't send query to external storage without context`
+	tx.Prepare(query)    // want `don't send query to external storage without context`
+	tx.Exec(query)       // want `don't send query to external storage without context`
+	tx.Stmt(nil)         // want `don't send query to external storage without context`
+
+	stmt, _ := db.Prepare(query) // want `don't send query to external storage without context`
+	stmt.Query(query)            // want `don't send query to external storage without context`
+	stmt.Exec(query)             // want `don't send query to external storage without context`
+	stmt.QueryRow(query)         // want `don't send query to external storage without context`
+
+	db.ExecContext(context.Background(), query)
+	tx.StmtContext(context.Background(), nil)
+	tx.ExecContext(context.Background(), query)
+	stmt.QueryRowContext(context.Background(), query)
+	stmt.ExecContext(context.Background(), query)
 }
