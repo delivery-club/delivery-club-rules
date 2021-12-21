@@ -250,13 +250,16 @@ func deferInLoop(m dsl.Matcher) {
 }
 
 func queryWithoutContext(m dsl.Matcher) {
+	m.Import(`github.com/delivery-club/delivery-club-rules/pkg`)
+	//TODO add *sql.stmt, *sql.Tx
 	m.Match(`$db.Query($*_)`,
 		`$db.QueryRow($*_)`,
 		`$db.Exec($*_)`,
 		`$db.Prepare($*_)`,
 		`$db.Ping($*_)`,
 		`$db.Begin($*_)`).
-		Where(m["db"].Object.Is("Var") && (m["db"].Type.Underlying().Is(`*sql.DB`) || m["db"].Type.Is(`*sql.DB`))).
+		Where(m["db"].Object.Is("Var") &&
+			(m["db"].Type.Underlying().Is(`*sql.DB`) || m["db"].Type.Is(`*sql.DB`) || m["db"].Type.Implements(`pkg.SQLQuery`))).
 		Report(`don't send query to external storage without context`).
 		At(m["db"])
 }
