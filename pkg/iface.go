@@ -5,9 +5,37 @@ import (
 	"database/sql"
 )
 
+type SQLDB interface {
+	SQLPing
+	SQLQuery
+	SQLQueryRow
+	SQLExec
+	SQLBeginTx
+	SQLPrepare
+}
+
+type SQLTx interface {
+	SQLQuery
+	SQLExec
+	SQLQueryRow
+	SQLPrepare
+	SQLCreateStmt
+}
+
+type SQLStmt interface {
+	SQLStmtQuery
+	SQLStmtQueryRow
+	SQLStmtExec
+}
+
 type SQLPing interface {
 	Ping() error
 	PingContext(ctx context.Context) error
+}
+
+type SQLCreateStmt interface {
+	Stmt(stmt *sql.Stmt) *sql.Stmt
+	StmtContext(ctx context.Context, stmt *sql.Stmt) *sql.Stmt
 }
 
 type SQLQuery interface {
