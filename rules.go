@@ -248,3 +248,15 @@ func deferInLoop(m dsl.Matcher) {
 		Report(`Possible resource leak, 'defer' is called in the 'for' loop`).
 		At(m["args"])
 }
+
+func queryWithoutContext(m dsl.Matcher) {
+	m.Match(`$db.Query($*_)`,
+		`$db.QueryRow($*_)`,
+		`$db.Exec($*_)`,
+		`$db.Prepare($*_)`,
+		`$db.Ping($*_)`,
+		`$db.Begin($*_)`).
+		Where(m["db"].Object.Is("Var") && (m["db"].Type.Underlying().Is(`*sql.DB`) || m["db"].Type.Is(`*sql.DB`))).
+		Report(`don't send query to external storage without context`).
+		At(m["db"])
+}
