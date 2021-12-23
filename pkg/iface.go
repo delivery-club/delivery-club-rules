@@ -139,7 +139,7 @@ type SQLQueryx interface {
 type SQLCreateStmtx interface {
 	SQLCreateStmt
 	Stmtx(stmt interface{}) *sqlx.Stmt
-	StmtxContext(ctx context.Context, stmt interface{}) *sql.Stmt
+	StmtxContext(ctx context.Context, stmt interface{}) *sqlx.Stmt
 	NamedStmt(stmt *sqlx.NamedStmt) *sqlx.NamedStmt
 	NamedStmtContext(ctx context.Context, stmt *sqlx.NamedStmt) *sqlx.NamedStmt
 }
