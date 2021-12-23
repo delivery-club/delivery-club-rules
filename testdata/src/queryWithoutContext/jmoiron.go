@@ -2,15 +2,13 @@ package queryWithoutContext
 
 import (
 	"context"
-
-	"github.com/delivery-club/delivery-club-rules/pkg"
 )
 
 func warningsJmoiron() {
 	var (
-		db   pkg.SQLDbx
-		tx   pkg.SQLTxx
-		stmt pkg.SQLStmt
+		db   SQLDbx
+		tx   SQLTxx
+		stmt SQLStmt
 	)
 	tx = db.MustBegin() // want `don't send query to external storage without context`
 	db.MustBeginTx(context.Background(), nil)

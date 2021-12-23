@@ -250,6 +250,10 @@ func deferInLoop(m dsl.Matcher) {
 }
 
 func queryWithoutContext(m dsl.Matcher) {
+	// in this rule we check all libraries which extend std sql lib
+	// but for check methods that have names different from the std sql,
+	// add new ones to match method below
+
 	m.Import(`github.com/delivery-club/delivery-club-rules/pkg`)
 
 	m.Match(
