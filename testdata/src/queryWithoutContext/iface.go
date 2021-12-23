@@ -1,10 +1,8 @@
-package pkg
+package queryWithoutContext
 
 import (
 	"context"
 	"database/sql"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type SQLDb interface {
@@ -33,7 +31,7 @@ type SQLStmt interface {
 type SQLDbx interface {
 	SQLPing
 	SQLQueryx
-	NamedQueryContext(ctx context.Context, query string, arg interface{}) (*sqlx.Rows, error)
+	NamedQueryContext(ctx context.Context, query string, arg interface{}) (*sql.Rows, error)
 	SQLQueryRow
 	SQLExecx
 	SQLSelectx
@@ -116,30 +114,34 @@ type SQLSelectx interface {
 }
 
 type SQLPreparex interface {
-	sqlx.Preparer
-	sqlx.PreparerContext
-	Preparex(query string) (*sqlx.Stmt, error)
-	PreparexContext(ctx context.Context, query string) (*sqlx.Stmt, error)
-	PrepareNamed(query string) (*sqlx.NamedStmt, error)
-	PrepareNamedContext(context context.Context, query string) (*sqlx.NamedStmt, error)
+	Prepare(query string) (*sql.Stmt, error)
+	PrepareContext(ctx context.Context, query string) (*sql.Stmt, error)
+	Preparex(query string) (*sql.Stmt, error)
+	PreparexContext(ctx context.Context, query string) (*sql.Stmt, error)
+	PrepareNamed(query string) (*sql.Stmt, error)
+	PrepareNamedContext(context context.Context, query string) (*sql.Stmt, error)
 }
 
 type SQLBeginTxx interface {
-	MustBegin() *sqlx.Tx
-	MustBeginTx(ctx context.Context, opts *sql.TxOptions) *sqlx.Tx
+	MustBegin() SQLTxx
+	MustBeginTx(ctx context.Context, opts *sql.TxOptions) *sql.Tx
 	SQLBeginTx
 }
 
 type SQLQueryx interface {
-	sqlx.Queryer
-	sqlx.QueryerContext
-	NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	Queryx(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRowx(query string, args ...interface{}) *sql.Row
+	QueryContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+	QueryxContext(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+	QueryRowxContext(ctx context.Context, query string, args ...interface{}) *sql.Row
+	NamedQuery(query string, arg interface{}) (*sql.Rows, error)
 }
 
 type SQLCreateStmtx interface {
 	SQLCreateStmt
-	Stmtx(stmt interface{}) *sqlx.Stmt
-	StmtxContext(ctx context.Context, stmt interface{}) *sqlx.Stmt
-	NamedStmt(stmt *sqlx.NamedStmt) *sqlx.NamedStmt
-	NamedStmtContext(ctx context.Context, stmt *sqlx.NamedStmt) *sqlx.NamedStmt
+	Stmtx(stmt interface{}) *sql.Stmt
+	StmtxContext(ctx context.Context, stmt interface{}) *sql.Stmt
+	NamedStmt(stmt *sql.Stmt) *sql.Stmt
+	NamedStmtContext(ctx context.Context, stmt *sql.Stmt) *sql.Stmt
 }

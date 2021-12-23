@@ -250,17 +250,40 @@ func deferInLoop(m dsl.Matcher) {
 }
 
 func queryWithoutContext(m dsl.Matcher) {
+	// in this rule we check all libraries which extend std sql lib
+	// but for check methods that have names different from the std sql,
+	// add new ones to match method below
+
 	m.Import(`github.com/delivery-club/delivery-club-rules/pkg`)
 
-	m.Match(`$db.Query($*_)`,
+	m.Match(
+		`$db.Query($*_)`,
+		`$db.Queryx($*_)`,
 		`$db.QueryRow($*_)`,
+		`$db.QueryRowx($*_)`,
+		`$db.NamedQuery($*_)`,
+
 		`$db.Exec($*_)`,
+		`$db.MustExec($*_)`,
+		`$db.NamedExec($*_)`,
+
+		`$db.Get($*_)`,
+		`$db.Select($*_)`,
+
 		`$db.Prepare($*_)`,
+		`$db.Preparex($*_)`,
+		`$db.PrepareNamed($*_)`,
+
 		`$db.Ping($*_)`,
 		`$db.Begin($*_)`,
-		`$db.Stmt($*_)`).
+		`$db.MustBegin($*_)`,
+
+		`$db.Stmt($*_)`,
+		`$db.Stmtx($*_)`,
+		`$db.NamedStmt($*_)`,
+	).
 		Where(m["db"].Object.Is("Var") &&
-			(m["db"].Type.Implements(`pkg.SQLDB`) || m["db"].Type.Implements(`pkg.SQLStmt`) || m["db"].Type.Implements(`pkg.SQLTx`))).
+			(m["db"].Type.Implements(`pkg.SQLDb`) || m["db"].Type.Implements(`pkg.SQLStmt`) || m["db"].Type.Implements(`pkg.SQLTx`))).
 		Report(`don't send query to external storage without context`).
 		At(m["db"])
 }
