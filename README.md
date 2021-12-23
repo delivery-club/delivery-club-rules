@@ -6,6 +6,7 @@ Delivery club go rules linter
 [![Go Reference](https://pkg.go.dev/badge/github.com/delivery-club/delivery-club-rules.svg)](https://pkg.go.dev/github.com/delivery-club/delivery-club-rules)
 
 ### How to use:
+Full installation example: https://github.com/peakle/dc-rules-example
 
 1. Install [ruleguard](https://github.com/quasilyte/go-ruleguard) and DSL package:
       ```shell
