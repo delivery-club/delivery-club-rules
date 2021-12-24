@@ -11,11 +11,15 @@ Full installation example: https://github.com/peakle/dc-rules-example
 1. Install [ruleguard](https://github.com/quasilyte/go-ruleguard) and DSL package:
       ```shell
       go get -v -u github.com/quasilyte/go-ruleguard/dsl
-      go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
       ```
 2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
    1. Like explicit check:
+      1. install ruleguard binary:
+      ``` shell
+      go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
+      ```
+      2. start lint:
       ``` shell
       ruleguard -rules rules.go ./...
       ```
