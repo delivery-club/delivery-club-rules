@@ -14,17 +14,7 @@ Full installation example: https://github.com/peakle/dc-rules-example
       ```
 2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
-   1. Like explicit check:
-      1. install ruleguard binary:
-      ``` shell
-      go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
-      ```
-      2. start lint:
-      ``` shell
-      ruleguard -rules rules.go ./...
-      ```
-
-   2. Or add like another one check in golangci-lint (will work for golangci-lint >v1.27.0):
+   1. Add like another one check in golangci-lint (will work for golangci-lint >v1.27.0):
 
        ``` yaml
        linters:
@@ -38,6 +28,15 @@ Full installation example: https://github.com/peakle/dc-rules-example
              ruleguard:
                rules: "YourDir/rules.go"
        ```
+   2. Or add like explicit check without golangci-lint:
+      1. install ruleguard binary:
+      ``` shell
+      go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
+      ```
+      2. start lint:
+      ``` shell
+      ruleguard -rules rules.go ./...
+      ```
    3. Like file watcher in Goland IDE (will work for golangci-lint >v1.27.0):
       1. add golangci-lint as `File Watcher` in IDE (Preferences -> Tools -> File Watchers -> Add)
       2. set `Arguments` field where `.golangci.yml` file will be like example above:
