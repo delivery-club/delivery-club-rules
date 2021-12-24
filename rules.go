@@ -13,17 +13,6 @@ func unusedFormatting(m dsl.Matcher) {
 		Report(`use function alternative without formatting`)
 }
 
-// from https://github.com/quasilyte/uber-rules
-func uncheckedTypeAssert(m dsl.Matcher) {
-	m.Match(
-		`$_ := $_.($_)`,
-		`$_ = $_.($_)`,
-		`$_($*_, $_.($_), $*_)`,
-		`$_{$*_, $_.($_), $*_}`,
-		`$_{$*_, $_: $_.($_), $*_}`).
-		Report(`avoid unchecked type assertions as they can panic`)
-}
-
 // from https://github.com/quasilyte/go-ruleguard
 func rangeCopyVal(m dsl.Matcher) {
 	m.Match(`for $_, $x := range $xs { $*_ }`, `for $_, $x = range $xs { $*_ }`).
@@ -40,13 +29,6 @@ func rangeExprCopy(m dsl.Matcher) {
 		Report(`copy of $x can be avoided with &$x`).
 		At(m["x"]).
 		Suggest(`&$x`)
-}
-
-// from https://github.com/quasilyte/uber-rules
-func ifacePtr(m dsl.Matcher) {
-	m.Match(`*$x`).
-		Where(m["x"].Type.Underlying().Is(`interface{ $*_ }`)).
-		Report(`don't use pointers to an interface`)
 }
 
 //TODO: add rule cases
