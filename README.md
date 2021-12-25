@@ -8,9 +8,11 @@ Delivery club go rules linter
 ### How to use:
 Full installation example: https://github.com/peakle/dc-rules-example
 
-1. Install [ruleguard](https://github.com/quasilyte/go-ruleguard) and DSL package:
+1. Install this and DSL package:
       ```shell
       go get -v -u github.com/quasilyte/go-ruleguard/dsl
+      go get -v github.com/delivery-club/delivery-club-rules
+      go get -v github.com/delivery-club/delivery-club-rules/pkg
       ```
 2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
@@ -28,8 +30,8 @@ Full installation example: https://github.com/peakle/dc-rules-example
              ruleguard:
                rules: "YourDir/rules.go"
        ```
-   2. Or add like explicit check without golangci-lint:
-      1. install ruleguard binary:
+   2. Or use like explicit check WITHOUT golangci-lint:
+      1. install [ruleguard](https://github.com/quasilyte/go-ruleguard) binary:
       ``` shell
       go install -v github.com/quasilyte/go-ruleguard/cmd/ruleguard@latest
       ```
