@@ -1,3 +1,10 @@
+## [Unreleased]
+### Changed:
+- remove jmoiron/sqlx dependency
+
+### Added:
+- new rule regexCompileInLoop
+
 ## [0.0.4] - 2021-12-23
 ### Added:
 - new rule deferInLoop
@@ -10,7 +17,7 @@
 
 ## [0.0.2] - 2021-12-18
 ### Added:
-- support for usage with external rules from another repositories
+- support usage with external rules from another repositories
 
 ## [0.0.1] - 2021-12-18
 ### Added:

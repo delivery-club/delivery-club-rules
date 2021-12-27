@@ -287,3 +287,122 @@ func queryWithoutContext(m dsl.Matcher) {
 		Report(`don't send query to external storage without context`).
 		At(m["db"])
 }
+
+func regexpCompileInLoop(m dsl.Matcher) {
+	m.Match(
+		`for $*_; $*_; $*_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+		`for range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+		`for range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+		`for range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+		`for range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+		`for range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+		`for range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+		`for range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for $_ := range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for $_ = range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+	).
+		At(m["s"]).
+		Where(m["s"].Const).
+		Report(`don't compile regex in the loop, move it outside of the loop`)
+}
