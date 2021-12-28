@@ -97,7 +97,7 @@ func getterNaming(m dsl.Matcher) {
 // disabled until https://github.com/go-critic/go-critic/issues/1176
 //func oneMethodInterfaceNaming(m dsl.Matcher) {
 //	m.Match(`type $name interface{ $method ($*_) $*_ }`).
-//		Where(!m["name"].Text.Matches(`\w(er|or|ar)$`) && !m["name"].Text.Matches(`^[A-Z]`)).
+//		Where(m["name"].Text.Matches(`^[A-Z]`) && !m["name"].Text.Matches(`\w(er|or|ar)$`)).
 //		Report("change interface name to $method + 'er|or|ar' pattern").
 //		At(m["name"])
 //}
