@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Changed:
 - remove jmoiron/sqlx dependency
+- temporarily disable oneMethodInterfaceNaming rule
 
 ### Added:
 - new rule regexCompileInLoop
