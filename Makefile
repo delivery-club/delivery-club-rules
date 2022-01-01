@@ -2,8 +2,7 @@ test:
 	go test --count=1 -race .
 
 lint:
-	@golangci-lint cache clean
 	@echo "Running golangci-lint..."
-	@golangci-lint run --skip-dirs testdata --disable deadcode,unused
+	@golangci-lint run --skip-dirs testdata --config=.golangci.yml
 	@echo "Running go-critic"
-	@gocritic check -enable='#experimental' ./...
+	@gocritic check -enableAll -disable='commentFormatting' ./...

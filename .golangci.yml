@@ -1,6 +1,8 @@
 linters:
   disable:
     - typecheck
+    - deadcode
+    - unused
   enable:
     - gocritic
 linters-settings:
