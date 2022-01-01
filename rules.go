@@ -407,3 +407,11 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Where(m["s"].Const).
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
+
+func simplifyErrorCheck(m dsl.Matcher) {
+	m.Match(`func $_($*_) $*_ { $*_; $err := $f($*args); if err != nil { $*_ }; $*_ }`,
+		`func $_($*_) $*_ { $*_; $err = $f($*args); if err != nil { $*_ }; $*_ }`).
+		Where(m["err"].Type.Implements("error")). /// TODO: check that chars count in line <= 120
+		Report(`error check can be simplified in one line`).
+		At(m["err"])
+}
