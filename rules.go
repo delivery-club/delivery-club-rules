@@ -407,3 +407,12 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Where(m["s"].Const).
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
+
+func unclosedResource(m dsl.Matcher) {
+	m.Match(`$res, $err := $open($*_); $next`).
+		Where(m["res"].Type.Implements(`io.Closer`) &&
+			m["err"].Type.Implements(`error`) &&
+			!m["next"].Text.Matches(`defer .*[cC]lose`)). // TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
+		Report(`$res.Close() should be deferred right after the $open error check`).
+		At(m["res"])
+}
