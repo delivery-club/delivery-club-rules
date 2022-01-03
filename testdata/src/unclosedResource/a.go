@@ -11,7 +11,8 @@ func foo() {
 		print(f.Name())
 	}
 
-	f, err = os.Open("bar") //want `f.Close() should be deferred right after the os.Open error check`
+	f, err = os.Open("bar") //want `\Qf.Close() should be deferred right after the os.Open error check`
+	print(f.Name())
 }
 
 func fooBar() {
@@ -20,5 +21,6 @@ func fooBar() {
 		print(ff.Fd())
 	}
 
-	ff, err = ioutil.TempFile("/kek", "foo") //want `ff.Close() should be deferred right after the ioutil.TempFile error check`
+	ff, err = ioutil.TempFile("/kek", "foo") //want `\Qff.Close() should be deferred right after the ioutil.TempFile error check`
+	print(ff.Name())
 }
