@@ -409,7 +409,9 @@ func regexpCompileInLoop(m dsl.Matcher) {
 }
 
 func unclosedResource(m dsl.Matcher) {
-	m.Match(`$res, $err := $open($*_); $next`).
+	m.Match(`$res, $err := $open($*_); $next`,
+		`$res, $err = $open($*_); $next`,
+		`var $res, $err = $open($*_); $next`).
 		Where(m["res"].Type.Implements(`io.Closer`) &&
 			m["err"].Type.Implements(`error`) &&
 			!m["next"].Text.Matches(`defer .*[cC]lose`)). // TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
