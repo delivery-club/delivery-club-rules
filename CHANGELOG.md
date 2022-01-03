@@ -5,6 +5,7 @@
 
 ### Added:
 - new rule regexCompileInLoop
+- new rule unclosedResource
 
 ## [0.0.4] - 2021-12-23
 ### Added:
