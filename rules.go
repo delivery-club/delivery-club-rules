@@ -72,12 +72,12 @@ func camelCaseNaming(m dsl.Matcher) {
 
 func notInformativePackageNaming(m dsl.Matcher) {
 	m.Match(`package $x`).
-		Where(
-			m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$|\d)`),
-		).
+			Where(
+				m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
+						m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$|\d)`) ||
+						m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$|\d)`) ||
+						m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$|\d)`),
+			).
 		Report("don't use general names to package naming").
 		At(m["x"])
 }
@@ -282,9 +282,10 @@ func queryWithoutContext(m dsl.Matcher) {
 		`$db.Stmt($*_)`,
 		`$db.Stmtx($*_)`,
 		`$db.NamedStmt($*_)`,
-	).
-		Where(m["db"].Object.Is("Var") &&
-			(m["db"].Type.Implements(`pkg.SQLDb`) || m["db"].Type.Implements(`pkg.SQLStmt`) || m["db"].Type.Implements(`pkg.SQLTx`))).
+	).Where(m["db"].Object.Is("Var") &&
+			(m["db"].Type.Implements(`pkg.SQLDb`) ||
+					m["db"].Type.Implements(`pkg.SQLStmt`) ||
+					m["db"].Type.Implements(`pkg.SQLTx`))).
 		Report(`don't send query to external storage without context`).
 		At(m["db"])
 }
@@ -408,13 +409,14 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
+// TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
 func unclosedResource(m dsl.Matcher) {
-	m.Match(`$res, $err := $open($*_); $next`,
-		`$res, $err = $open($*_); $next`,
-		`var $res, $err = $open($*_); $next`).
-		Where(m["res"].Type.Implements(`io.Closer`) &&
-			m["err"].Type.Implements(`error`) &&
-			!m["next"].Text.Matches(`defer .*[cC]lose`)). // TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
+	m.Match(`$res, $err := $open($*_); $*next`,
+		`$res, $err = $open($*_); $*next`,
+		`var $res, $err = $open($*_); $*next`).
+			Where(m["res"].Type.Implements(`io.Closer`) &&
+					m["err"].Type.Implements(`error`) &&
+					(!m["next"].Text.Matches(`defer \w+\.[cC]lose`) && !m["next"].Text.Matches(`defer func\((.+\s.+)*\) {(\s+[^}]*)*\w+\.[cC]lose`))).
 		Report(`$res.Close() should be deferred right after the $open error check`).
 		At(m["res"])
 }
