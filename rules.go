@@ -411,7 +411,9 @@ func regexpCompileInLoop(m dsl.Matcher) {
 /// TODO: check that chars count in line <= 120
 func simplifyErrorCheckNoDecl(m dsl.Matcher) {
 	m.Match(`$err := $f($*args); if $err != nil { $*_ }`,
-		`$err = $f($*args); if $err != nil { $*_ }`).
+		`$err = $f($*args); if $err != nil { $*_ }`,
+		`var $err = $f($*args); if $err != nil { $*_ }`,
+	).
 		Where(m["err"].Type.Implements("error") &&
 			m["f"].Text.Matches("(?s)^.{0,40}$") && m["args"].Text.Matches("(?s)^.{0,40}$")).
 		Report(`error check can be simplified in one line`).

@@ -10,7 +10,7 @@ func a() {
 		return
 	}
 
-	err = bar.Error()
+	err = bar.Error() // want "error check can be simplified in one line"
 	if err != nil {
 		return
 	}
@@ -27,6 +27,26 @@ func b() {
 	err = bar.Error() // want "error check can be simplified in one line"
 	if err != nil {
 		return
+	}
+}
+
+func myFooFoo() {
+	var err = foo("").Error() // want "error check can be simplified in one line"
+	if err != nil {
+		return
+	}
+
+	print(123)
+}
+
+func negative() {
+	err, err2 := foo("").Error(), foo("").Error()
+	if err != nil {
+		print(123)
+	}
+
+	if err2 != nil {
+		print(332)
 	}
 }
 
