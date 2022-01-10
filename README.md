@@ -10,7 +10,6 @@ Full installation example: https://github.com/peakle/dc-rules-example
 
 1. Install this and DSL package:
       ```shell
-      go get -v -u github.com/quasilyte/go-ruleguard/dsl
       go get -v github.com/delivery-club/delivery-club-rules
       go get -v github.com/delivery-club/delivery-club-rules/pkg
       ```
