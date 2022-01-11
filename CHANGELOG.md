@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.0.5] - 2021-12-28
 ### Changed:
 - remove jmoiron/sqlx dependency
 - temporarily disable oneMethodInterfaceNaming rule
