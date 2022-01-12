@@ -44,3 +44,19 @@ func uncheckedTypeAssert() {
 		_ = [...]interface{}{10: 0, 20: v.(int), 30: 0} // want `\Qavoid unchecked type assertions as they can panic`
 	}
 }
+
+func negative() {
+	var v interface{}
+
+	switch v.(type) {
+	case string:
+	case int:
+	}
+
+	switch vv := v.(type) {
+	case string:
+		print(vv)
+	case byte:
+		print(vv)
+	}
+}
