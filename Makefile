@@ -10,5 +10,5 @@ lint:
 ci-lint: install-linter lint
 
 install-linter:
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH_DIR)/bin v1.30.0
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH_DIR)/bin v1.43.0
 	@$(GOPATH_DIR)/bin/golangci-lint run -v

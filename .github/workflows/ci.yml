@@ -15,4 +15,4 @@ jobs:
       - name: Run coverage
         run: go test --count=1 -race .
       - name: Run lint
-        run: make lint
+        run: make ci-lint
