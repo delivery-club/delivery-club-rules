@@ -14,3 +14,5 @@ jobs:
           go-version: '1.17'
       - name: Run coverage
         run: go test --count=1 -race .
+      - name: Run lint
+        run: make lint
