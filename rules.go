@@ -289,37 +289,21 @@ func queryWithoutContext(m dsl.Matcher) {
 
 func regexpCompileInLoop(m dsl.Matcher) {
 	m.Match(
-		`for $*_; $*_; $*_ { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for $_ := range $_ { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for $_ = range $_ { $*_; $*_ = regexp.$method($s); $*_ }`,
-		`for range $_ { $*_; $*_ = regexp.$method($s); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
 
-		`for $*_; $*_; $*_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for $_ := range $_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for $_ = range $_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-		`for range $_ { $*_; $*_ := regexp.$method($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-		`for { $*_; $_, $_ = regexp.$method($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-		`for range $_ { $*_; $*_ = regexp.$method($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
-		`for range $_ { $*_; $*_ := regexp.$method($s, $_); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 	).
 		At(m["s"]).
 		Where(m["s"].Const && m["method"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)).
