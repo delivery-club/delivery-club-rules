@@ -11,4 +11,4 @@ linters-settings:
       - ruleguard
     settings:
       ruleguard:
-        rules: "example/rules.go"
+        rules: "rules.go"

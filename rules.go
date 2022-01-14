@@ -309,3 +309,26 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Where(m["s"].Const && m["method"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)).
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
+
+func simplifyErrorCheck(m dsl.Matcher) {
+	m.Match(`$err := $f($*args); if $err != nil { $*body }`).
+		Where(m["err"].Type.Implements("error") &&
+			m["f"].Text.Matches("(?s)^.{0,40}$") && m["args"].Text.Matches("(?s)^.{0,40}$")). /// TODO: check that chars count in line <= 120
+		Report(`error check can be simplified in one line`).
+		Suggest(`if $err := $f($args); $err != nil { $body }`).
+		At(m["err"])
+
+	m.Match(`$err = $f($*args); if $err != nil { $*_ }`).
+		Where(m["err"].Type.Implements("error") &&
+			m["f"].Text.Matches("(?s)^.{0,40}$") && m["args"].Text.Matches("(?s)^.{0,40}$")).
+		Report(`error check can be simplified in one line`).
+		Suggest(`if $err = $f($args); $err != nil { $body }`).
+		At(m["err"])
+
+	m.Match(`var $err = $f($*args); if $err != nil { $*_ }`).
+		Where(m["err"].Type.Implements("error") &&
+			m["f"].Text.Matches("(?s)^.{0,40}$") && m["args"].Text.Matches("(?s)^.{0,40}$")).
+		Report(`error check can be simplified in one line`).
+		Suggest(`if $err := $f($args); $err != nil { $body }`).
+		At(m["err"])
+}
