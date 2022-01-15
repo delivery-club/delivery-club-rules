@@ -1,4 +1,4 @@
-package syncNonPtr
+package syncPoolNonPtr
 
 import (
 	"sync"
