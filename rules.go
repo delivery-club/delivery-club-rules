@@ -430,3 +430,10 @@ func simplifyErrorCheck(m dsl.Matcher) {
 		Suggest(`if $err := $f($args); $err != nil { $body }`).
 		At(m["err"])
 }
+
+func syncNonPtr(m dsl.Matcher) {
+	m.Match(`$x.Put($y)`).
+		Where(m["x"].Type.Is("sync.Pool") && !m["y"].Type.Is("*$_")).
+		Report(`don't use sync.Pool on non pointer objects`).
+		At(m["y"])
+}

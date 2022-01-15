@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added:
 - new style rule simplifyErrCheck
+- new rule syncPoolNonPtr
 
 ## [0.0.5] - 2021-12-28
 ### Changed:
