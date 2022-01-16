@@ -432,9 +432,15 @@ func simplifyErrorCheck(m dsl.Matcher) {
 }
 
 func syncPoolNonPtr(m dsl.Matcher) {
+	isPointer := func(x dsl.Var) bool {
+		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
+				x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{}") ||
+				x.Type.Underlying().Is(`types.Signature`) || x.Type.Underlying().Is(`types.UnsafePointer`)
+	}
+
 	m.Match(`$x.Put($y)`).
-		Where(m["x"].Type.Is("sync.Pool") &&
-			(!m["y"].Type.Is("*$_") && !m["y"].Type.Is("[]$_") && !m["y"].Type.Is("chan $_") && !m["y"].Type.Is("map[$_]$_"))).
+			Where(m["x"].Type.Is("sync.Pool") &&
+					(!isPointer(m["y"]) || m["y"].Type.Underlying().Is(`[]$_`))).
 		Report(`don't use sync.Pool on non pointer objects`).
 		At(m["y"])
 }
