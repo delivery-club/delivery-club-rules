@@ -5,11 +5,7 @@ import (
 
 	"github.com/quasilyte/go-ruleguard/analyzer"
 	"golang.org/x/tools/go/analysis/analysistest"
-
-	"github.com/delivery-club/delivery-club-rules/pkg"
 )
-
-var _ pkg.SQLDb = nil
 
 func TestRules(t *testing.T) {
 	testdata := analysistest.TestData()
