@@ -12,7 +12,6 @@ Full installation example: https://github.com/peakle/dc-rules-example
 1. Install this and DSL package:
       ```shell
       go get -v github.com/delivery-club/delivery-club-rules
-      go get -v github.com/delivery-club/delivery-club-rules/pkg
       ```
 2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
