@@ -45,6 +45,16 @@ func fooBar2() {
 	print(ff.Name())
 }
 
+func warning() {
+	f, err := os.Open("bar") //want `\Qf.Close() should be deferred right after the os.Open error check`
+	print(f.Name())
+
+	ff, err := os.Open("bar")
+	if err == nil {
+		defer ff.Close()
+	}
+}
+
 func negative() {
 	ff, err := ioutil.TempFile("/fo", "bo")
 	if err != nil {
@@ -62,8 +72,8 @@ func negative() {
 	}()
 }
 
-func falseNegative() {
-	f, err := os.Open("bar") // TODO must be warning
+func dataRace() {
+	f, err := os.Open("bar")
 	print(f.Name())
 
 	f, err = os.Open("bar")

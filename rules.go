@@ -411,12 +411,12 @@ func regexpCompileInLoop(m dsl.Matcher) {
 
 // TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
 func unclosedResource(m dsl.Matcher) {
-	m.Match(`$res, $err := $open($*_); $*next`,
-		`$res, $err = $open($*_); $*next`,
-		`var $res, $err = $open($*_); $*next`).
+	m.Match(`$res, $err := $open($*_); $*body`,
+		`$res, $err = $open($*_); $*body`,
+		`var $res, $err = $open($*_); $*body`).
 			Where(m["res"].Type.Implements(`io.Closer`) &&
 					m["err"].Type.Implements(`error`) &&
-					(!m["next"].Text.Matches(`defer \w+\.[cC]lose`) && !m["next"].Text.Matches(`defer func\((.+\s.+)*\) {(\s+[^}]*)*\w+\.[cC]lose`))).
+					(!m["body"].Contains(`$res.Close()`))).
 		Report(`$res.Close() should be deferred right after the $open error check`).
 		At(m["res"])
 }
