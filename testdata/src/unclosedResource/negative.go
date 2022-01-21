@@ -24,10 +24,18 @@ func negative1() {
 var globalVar *os.File
 
 func negative2() {
-	globalVar, _ = ioutil.TempFile("", "") // global var
+	globalVar, _ = ioutil.TempFile("", "") // false negative because "_" doesn't have error type
 	kk := globalVar.Name()
 
 	print(kk)
+}
+
+func negativeGlobalVar() {
+	var err error
+	globalVar, err = ioutil.TempFile("", "") // global var
+	kk := globalVar.Name()
+
+	print(kk, err)
 }
 
 func negative3() *os.File {
