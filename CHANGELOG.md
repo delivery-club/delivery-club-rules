@@ -1,4 +1,7 @@
 ## [Unreleased]
+### Added:
+- new rule unclosedResource
+
 ## [0.0.6] - 2022-01-19
 ### Added:
 - new style rule simplifyErrCheck
@@ -10,7 +13,6 @@
 
 ### Added:
 - new rule regexCompileInLoop
-- new rule unclosedResource
 
 ## [0.0.4] - 2021-12-23
 ### Added:
