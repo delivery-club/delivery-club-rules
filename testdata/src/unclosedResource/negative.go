@@ -21,10 +21,13 @@ func negative1() {
 	ff.Close()
 }
 
-var f *os.File
+var globalVar *os.File
 
 func negative2() {
-	f, _ = ioutil.TempFile("", "") // global var
+	globalVar, _ = ioutil.TempFile("", "") // global var
+	kk := globalVar.Name()
+
+	print(kk)
 }
 
 func negative3() *os.File {
