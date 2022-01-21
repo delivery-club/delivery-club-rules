@@ -1,11 +1,12 @@
 package unclosedResource
 
 import (
+	"database/sql"
 	"io/ioutil"
 	"os"
 )
 
-func foo() {
+func warning1() {
 	f, err := os.Open("bar") //want `\Qf.Close() should be deferred right after the os.Open error check`
 	if err == nil {
 		print(f.Name())
@@ -15,7 +16,7 @@ func foo() {
 	print(f.Name())
 }
 
-func foo2() {
+func warning2() {
 	f, err := os.Open("bar")
 	if err == nil {
 		defer f.Close()
@@ -25,7 +26,7 @@ func foo2() {
 	print(f.Name())
 }
 
-func fooBar() {
+func warning3() {
 	var ff, err = os.Open("foo.txt") //want `\Qff.Close() should be deferred right after the os.Open error check`
 	if err != nil {
 		print(ff.Fd())
@@ -35,7 +36,7 @@ func fooBar() {
 	print(ff.Name())
 }
 
-func fooBar2() {
+func warning4() {
 	ff, err := os.Open("foo.txt") //want `\Qff.Close() should be deferred right after the os.Open error check`
 	if err != nil {
 		print(ff.Fd())
@@ -45,7 +46,7 @@ func fooBar2() {
 	print(ff.Name())
 }
 
-func warning() {
+func warning5() {
 	f, err := os.Open("bar") //want `\Qf.Close() should be deferred right after the os.Open error check`
 	print(f.Name())
 
@@ -55,29 +56,19 @@ func warning() {
 	}
 }
 
-func negative() {
-	ff, err := ioutil.TempFile("/fo", "bo")
-	if err != nil {
-		print(err)
-	}
-	defer ff.Close()
+func warning6() []int {
+	db, _ := sql.Open("", "")
+	rows, _ := db.QueryContext(nil, "")
 
-	ff, err = ioutil.TempFile("/fo", "bo")
-	if err != nil {
-		print(err)
-	}
-	defer func() {
-		print(123)
-		ff.Close()
-	}()
-}
+	var (
+		i      int
+		result []int
+	)
 
-func dataRace() {
-	f, err := os.Open("bar")
-	print(f.Name())
-
-	f, err = os.Open("bar")
-	if err == nil {
-		defer f.Close()
+	for rows.Next() {
+		_ = rows.Scan(&i)
+		result = append(result, i)
 	}
+
+	return result
 }
