@@ -94,6 +94,16 @@ func negative8() []int {
 	return result
 }
 
+func negative9() {
+	closure := func() (*os.File, error) {
+		return nil, nil
+	}
+
+	f, _ := closure()
+	f.Name()
+	defer f.Close()
+}
+
 // test for: https://github.com/quasilyte/go-ruleguard/issues/366
 func dataRace() {
 	f, err := os.Open("bar")

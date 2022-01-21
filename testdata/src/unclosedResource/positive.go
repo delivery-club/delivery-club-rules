@@ -72,3 +72,12 @@ func warning6() []int {
 
 	return result
 }
+
+func warning7() {
+	closure := func() (*os.File, error) {
+		return nil, nil
+	}
+
+	f, _ := closure() // want `\Qf.Close() should be deferred right after the closure error check`
+	f.Name()
+}
