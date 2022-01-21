@@ -74,8 +74,7 @@ func myFuncThree() error {
 	}
 
 	var err error
-	err = myBar() // want `may be simplified to return error without if statement`
-	if err != nil {
+	if err = myBar(); err != nil { // want `may be simplified to return error without if statement`
 		return err
 	}
 

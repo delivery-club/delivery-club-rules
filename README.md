@@ -2,6 +2,7 @@
 
 Delivery club go rules linter
 
+[![Tests](https://github.com/delivery-club/delivery-club-rules/workflows/Tests/badge.svg)](https://github.com/delivery-club/delivery-club-rules/blob/main/.github/workflows/ci.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/delivery-club/delivery-club-rules)](https://goreportcard.com/report/github.com/delivery-club/delivery-club-rules)
 [![Go Reference](https://pkg.go.dev/badge/github.com/delivery-club/delivery-club-rules.svg)](https://pkg.go.dev/github.com/delivery-club/delivery-club-rules)
 
@@ -10,9 +11,7 @@ Full installation example: https://github.com/peakle/dc-rules-example
 
 1. Install this and DSL package:
       ```shell
-      go get -v -u github.com/quasilyte/go-ruleguard/dsl
       go get -v github.com/delivery-club/delivery-club-rules
-      go get -v github.com/delivery-club/delivery-club-rules/pkg
       ```
 2. Create rules.go file in your project like in [example](https://github.com/delivery-club/delivery-club-rules/tree/main/example/rules.go)
 3. Add check to your pipeline:
