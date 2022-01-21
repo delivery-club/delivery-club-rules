@@ -408,14 +408,21 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
-// TODO replace by sub-match: https://github.com/quasilyte/go-ruleguard/issues/28
 func unclosedResource(m dsl.Matcher) {
-	m.Match(`$res, $err := $open($*_); $*body`,
-		`$res, $err = $open($*_); $*body`,
-		`var $res, $err = $open($*_); $*body`).
-			Where(m["res"].Type.Implements(`io.Closer`) &&
-					m["err"].Type.Implements(`error`) &&
-					(!m["body"].Contains(`$res.Close()`))).
-		Report(`$res.Close() should be deferred right after the $open error check`).
+	varEscapeFunction := func(x dsl.Var) bool {
+		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
+			x.Contains(`$_{$*_, $_: $res, $*_}`) || x.Contains(`$_ <- $res`) ||
+			x.Contains(`return $*_, $res, $*_`) || x.Contains(`$_[$_] = $res`) ||
+			x.Contains(`$_[$res] = $_`)
+	}
+
+	m.Match(`$res, $err := $x.$open($*_); $*body`,
+		`$res, $err = $x.$open($*_); $*body`,
+		`var $res, $err = $x.$open($*_); $*body`,
+	).
+		Where(m["res"].Type.Implements(`io.Closer`) &&
+			m["err"].Type.Implements(`error`) &&
+			(!m["body"].Contains(`$res.Close()`) && !varEscapeFunction(m["body"]))).
+		Report(`$res.Close() should be deferred right after the $x.$open error check`).
 		At(m["res"])
 }

@@ -74,6 +74,8 @@ func negative7() {
 
 func negative8() []int {
 	db, _ := sql.Open("", "")
+	defer db.Close()
+
 	rows, _ := db.QueryContext(nil, "")
 
 	var (

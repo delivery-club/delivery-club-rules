@@ -57,8 +57,8 @@ func warning5() {
 }
 
 func warning6() []int {
-	db, _ := sql.Open("", "")
-	rows, _ := db.QueryContext(nil, "")
+	db, _ := sql.Open("", "")              //want `\Qdb.Close() should be deferred right after the sql.Open error check`
+	var rows, _ = db.QueryContext(nil, "") //want `\Qrows.Close() should be deferred right after the db.QueryContext error check`
 
 	var (
 		i      int
