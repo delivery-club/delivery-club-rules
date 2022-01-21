@@ -62,7 +62,9 @@ func negative6() {
 		File: file,
 	}
 
-	print(fileDecorator1, fileDecorator2)
+	kk, kkk := fileDecorator1.Name(), fileDecorator2.Name()
+
+	print(kk, kkk)
 }
 
 func negative7() {
