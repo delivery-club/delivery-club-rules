@@ -416,6 +416,10 @@ func unclosedResource(m dsl.Matcher) {
 			x.Contains(`$_[$res] = $_`)
 	}
 
+	//isGlobalVar := func(x dsl.Var) bool {
+	//	return x. // plug //TODO add check for global var
+	//}
+
 	m.Match(`$res, $err := $open($*_); $*body`,
 		`$res, $err = $open($*_); $*body`,
 		`var $res, $err = $open($*_); $*body`,
