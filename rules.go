@@ -408,6 +408,7 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
+//TODO skip global var
 func unclosedResource(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
@@ -417,7 +418,7 @@ func unclosedResource(m dsl.Matcher) {
 	}
 
 	//isGlobalVar := func(x dsl.Var) bool {
-	//	return x. // plug //TODO add check for global var
+	//	return x. // plug
 	//}
 
 	m.Match(`$res, $err := $open($*_); $*body`,
@@ -429,6 +430,24 @@ func unclosedResource(m dsl.Matcher) {
 			(!m["body"].Contains(`$res.Close()`) && !varEscapeFunction(m["body"]))).
 		Report(`$res.Close() should be deferred right after the $open error check`).
 		At(m["res"])
+}
+
+// todo skip global var
+func unstoppedTimer(m dsl.Matcher) {
+	varEscapeFunction := func(x dsl.Var) bool {
+		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
+				x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
+				x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
+				x.Contains(`$_[$x] = $_`)
+	}
+
+	m.Match(`$x := time.NewTimer($_); $*body`,
+		`$x = time.NewTimer($_); $*body`,
+		`var $x = time.NewTimer($_); $*body`,
+		`var $x $_ = time.NewTimer($_); $*body`).
+		Where(!m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
+		Report(`unstopped timer`).
+		At(m["x"])
 }
 
 func simplifyErrorCheck(m dsl.Matcher) {

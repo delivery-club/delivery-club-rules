@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added:
 - new rule unclosedResource
+- new rule unstoppedTimer
 
 ## [0.0.6] - 2022-01-19
 ### Added:
