@@ -1,4 +1,10 @@
 ## [Unreleased]
+### Added:
+- new rule syncPoolNonPtr
+
+### Changed:
+- simplified regexCompileInLoop
+
 ## [0.0.6] - 2022-01-19
 ### Added:
 - new style rule simplifyErrCheck
