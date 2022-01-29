@@ -5,6 +5,9 @@
 ### Changed:
 - simplified regexCompileInLoop
 
+### Fixed:
+- linter usage with enabled module vendoring
+
 ## [0.0.6] - 2022-01-19
 ### Added:
 - new style rule simplifyErrCheck
