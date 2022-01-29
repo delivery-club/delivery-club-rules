@@ -2,6 +2,8 @@ package rules
 
 import (
 	"github.com/quasilyte/go-ruleguard/dsl"
+
+	_ "github.com/delivery-club/delivery-club-rules/pkg"
 )
 
 var Bundle = dsl.Bundle{}
