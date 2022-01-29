@@ -15,14 +15,15 @@ func unusedFormatting(m dsl.Matcher) {
 		Report(`use function alternative without formatting`)
 }
 
-// from https://github.com/quasilyte/uber-rules
 func uncheckedTypeAssert(m dsl.Matcher) {
 	m.Match(
 		`$_ := $_.($_)`,
 		`$_ = $_.($_)`,
 		`$_($*_, $_.($_), $*_)`,
 		`$_{$*_, $_.($_), $*_}`,
-		`$_{$*_, $_: $_.($_), $*_}`).
+		`$_{$*_, $_: $_.($_), $*_}`,
+		`$_ <- $_.($_)`,
+		`$_{$*_, $_.($_): $_, $*_}`).
 		Report(`avoid unchecked type assertions as they can panic`)
 }
 
@@ -338,8 +339,8 @@ func simplifyErrorCheck(m dsl.Matcher) {
 func syncPoolNonPtr(m dsl.Matcher) {
 	isPointer := func(x dsl.Var) bool {
 		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
-				x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
-				x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
+			x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
+			x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
 	}
 
 	m.Match(`$x.Put($y)`).
