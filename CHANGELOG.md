@@ -4,6 +4,7 @@
 
 ### Changed:
 - simplified regexCompileInLoop
+- extended type assert rule
 
 ### Fixed:
 - linter usage with enabled module vendoring
