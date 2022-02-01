@@ -3,6 +3,7 @@ linters:
     - typecheck
     - deadcode
     - unused
+    - varcheck
   enable:
     - gocritic
 linters-settings:
