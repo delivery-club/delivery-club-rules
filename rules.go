@@ -336,6 +336,23 @@ func unclosedResource(m dsl.Matcher) {
 		At(m["res"])
 }
 
+func unstoppedTimer(m dsl.Matcher) {
+	varEscapeFunction := func(x dsl.Var) bool {
+		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
+			x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
+			x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
+			x.Contains(`$_[$x] = $_`)
+	}
+
+	m.Match(`$x := time.NewTimer($_); $*body`,
+		`$x = time.NewTimer($_); $*body`,
+		`var $x = time.NewTimer($_); $*body`,
+		`var $x $_ = time.NewTimer($_); $*body`).
+		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
+		Report(`unstopped timer`).
+		At(m["x"])
+}
+
 func simplifyErrorCheck(m dsl.Matcher) {
 	m.Match(`$err := $f($*args); if $err != nil { $*body }`).
 		Where(m["err"].Type.Implements("error") &&
