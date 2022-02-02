@@ -322,9 +322,13 @@ func unclosedResource(m dsl.Matcher) {
 		`$res, $err = $open($*_); $*body`,
 		`var $res, $err = $open($*_); $*body`,
 	).
-		Where(m["res"].Type.Implements(`io.Closer`) && !m["res"].Object.IsGlobal() &&
-			m["err"].Type.Implements(`error`) &&
-			(!m["body"].Contains(`$res.Close()`) && !varEscapeFunction(m["body"]))).
+		Where(
+			m["res"].Type.Implements(`io.Closer`) &&
+				!m["res"].Object.IsGlobal() &&
+				m["err"].Type.Implements(`error`) &&
+				!m["body"].Contains(`$res.Close()`) &&
+				!varEscapeFunction(m["body"]),
+		).
 		Report(`$res.Close() should be deferred right after the $open error check`).
 		At(m["res"])
 }
