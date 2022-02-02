@@ -9,4 +9,4 @@ lint:
 ci-lint: install-linter lint
 
 install-linter:
-	@go install  github.com/quasilyte/go-ruleguard/cmd/ruleguard@20831c4d6142bf041244dea4b8e749e0ea323581
+	@go install  github.com/quasilyte/go-ruleguard/cmd/ruleguard@cb19258d2ade88dbf466420bb4585dc747bcec57
