@@ -1,5 +1,6 @@
 ## [Unreleased]
 ### Added:
+- new rule unclosedResource
 - new rule syncPoolNonPtr
 
 ### Changed:

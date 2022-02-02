@@ -4,11 +4,9 @@ test:
 	go test --count=1 -race .
 
 lint:
-	@echo "Running golangci-lint..."
-	@golangci-lint run --skip-dirs testdata --config=.golangci.yml
+	ruleguard -rules=rules.go ./...
 
 ci-lint: install-linter lint
 
 install-linter:
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH_DIR)/bin v1.44.0
-	@$(GOPATH_DIR)/bin/golangci-lint run -v
+	@go install  github.com/quasilyte/go-ruleguard/cmd/ruleguard@cb19258d2ade88dbf466420bb4585dc747bcec57

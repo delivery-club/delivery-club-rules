@@ -313,6 +313,29 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
+func unclosedResource(m dsl.Matcher) {
+	varEscapeFunction := func(x dsl.Var) bool {
+		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
+			x.Contains(`$_{$*_, $_: $res, $*_}`) || x.Contains(`$_ <- $res`) ||
+			x.Contains(`return $*_, $res, $*_`) || x.Contains(`$_[$_] = $res`) ||
+			x.Contains(`$_[$res] = $_`)
+	}
+
+	m.Match(`$res, $err := $open($*_); $*body`,
+		`$res, $err = $open($*_); $*body`,
+		`var $res, $err = $open($*_); $*body`,
+	).
+		Where(
+			m["res"].Type.Implements(`io.Closer`) &&
+				!m["res"].Object.IsGlobal() &&
+				m["err"].Type.Implements(`error`) &&
+				!m["body"].Contains(`$res.Close()`) &&
+				!varEscapeFunction(m["body"]),
+		).
+		Report(`$res.Close() should be deferred right after the $open error check`).
+		At(m["res"])
+}
+
 func simplifyErrorCheck(m dsl.Matcher) {
 	m.Match(`$err := $f($*args); if $err != nil { $*body }`).
 		Where(m["err"].Type.Implements("error") &&

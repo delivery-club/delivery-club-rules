@@ -15,6 +15,8 @@ type decoratorWithParams struct {
 
 func warnings() {
 	db, _ := sql.Open("PostgreSQL", "test")
+	defer db.Close()
+
 	db.Query(`SELECT 1`)    // want `don't send query to external storage without context`
 	db.QueryRow(`SELECT 1`) // want `don't send query to external storage without context`
 	db.Exec(`SELECT 1`)     // want `don't send query to external storage without context`
@@ -48,9 +50,11 @@ func warnings() {
 	tx.Stmt(nil)         // want `don't send query to external storage without context`
 
 	stmt, _ := db.Prepare(query) // want `don't send query to external storage without context`
-	stmt.Query(query)            // want `don't send query to external storage without context`
-	stmt.Exec(query)             // want `don't send query to external storage without context`
-	stmt.QueryRow(query)         // want `don't send query to external storage without context`
+	defer stmt.Close()
+
+	stmt.Query(query)    // want `don't send query to external storage without context`
+	stmt.Exec(query)     // want `don't send query to external storage without context`
+	stmt.QueryRow(query) // want `don't send query to external storage without context`
 
 	db.ExecContext(context.Background(), query)
 	tx.StmtContext(context.Background(), nil)
