@@ -2,6 +2,8 @@ package rules
 
 import (
 	"github.com/quasilyte/go-ruleguard/dsl"
+
+	_ "github.com/delivery-club/delivery-club-rules/pkg"
 )
 
 var Bundle = dsl.Bundle{}
@@ -13,14 +15,15 @@ func unusedFormatting(m dsl.Matcher) {
 		Report(`use function alternative without formatting`)
 }
 
-// from https://github.com/quasilyte/uber-rules
 func uncheckedTypeAssert(m dsl.Matcher) {
 	m.Match(
 		`$_ := $_.($_)`,
 		`$_ = $_.($_)`,
 		`$_($*_, $_.($_), $*_)`,
 		`$_{$*_, $_.($_), $*_}`,
-		`$_{$*_, $_: $_.($_), $*_}`).
+		`$_{$*_, $_: $_.($_), $*_}`,
+		`$_ <- $_.($_)`,
+		`$_{$*_, $_.($_): $_, $*_}`).
 		Report(`avoid unchecked type assertions as they can panic`)
 }
 
@@ -72,12 +75,10 @@ func camelCaseNaming(m dsl.Matcher) {
 
 func notInformativePackageNaming(m dsl.Matcher) {
 	m.Match(`package $x`).
-		Where(
-			m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$|\d)`) ||
-				m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$|\d)`),
-		).
+		Where(m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
+			m["x"].Text.Matches(`(^l|L|_(l|L))ib([A-Z]|_|$|\d)`) ||
+			m["x"].Text.Matches(`(^u|U|_(u|U))til([A-Z]|_|$|\d)`) ||
+			m["x"].Text.Matches(`(^s|S|_(s|S))hared([A-Z]|_|$|\d)`)).
 		Report("don't use general names to package naming").
 		At(m["x"])
 }
@@ -291,124 +292,27 @@ func queryWithoutContext(m dsl.Matcher) {
 
 func regexpCompileInLoop(m dsl.Matcher) {
 	m.Match(
-		`for $*_; $*_; $*_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
-		`for range $_ { $*_; $_ = regexp.MustCompile($s); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
 
-		`for $*_; $*_; $*_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-		`for range $_ { $*_; $_ := regexp.MustCompile($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-		`for range $_ { $*_; $_, $_ = regexp.Compile($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-		`for range $_ { $*_; $_, $_ := regexp.Compile($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-		`for range $_ { $*_; $_ = regexp.MustCompilePOSIX($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-		`for range $_ { $*_; $_ := regexp.MustCompilePOSIX($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-		`for range $_ { $*_; $_, $_ = regexp.CompilePOSIX($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-		`for range $_ { $*_; $_, $_ := regexp.CompilePOSIX($s); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ = regexp.Match($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ := regexp.Match($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ = regexp.MatchString($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ := regexp.MatchString($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ = regexp.MatchReader($s, $_); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for $_, $_ := range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for $_, $_ = range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for $_ := range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for $_ = range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
-		`for range $_ { $*_; $_, $_ := regexp.MatchReader($s, $_); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 	).
 		At(m["s"]).
-		Where(m["s"].Const).
+		Where(m["s"].Const && m["method"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)).
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
-//TODO skip global var
 func unclosedResource(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
@@ -417,35 +321,34 @@ func unclosedResource(m dsl.Matcher) {
 			x.Contains(`$_[$res] = $_`)
 	}
 
-	//isGlobalVar := func(x dsl.Var) bool {
-	//	return x. // plug
-	//}
-
 	m.Match(`$res, $err := $open($*_); $*body`,
 		`$res, $err = $open($*_); $*body`,
 		`var $res, $err = $open($*_); $*body`,
 	).
-		Where(m["res"].Type.Implements(`io.Closer`) &&
-			m["err"].Type.Implements(`error`) &&
-			(!m["body"].Contains(`$res.Close()`) && !varEscapeFunction(m["body"]))).
+		Where(
+			m["res"].Type.Implements(`io.Closer`) &&
+				!m["res"].Object.IsGlobal() &&
+				m["err"].Type.Implements(`error`) &&
+				!m["body"].Contains(`$res.Close()`) &&
+				!varEscapeFunction(m["body"]),
+		).
 		Report(`$res.Close() should be deferred right after the $open error check`).
 		At(m["res"])
 }
 
-// todo skip global var
 func unstoppedTimer(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
-				x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
-				x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
-				x.Contains(`$_[$x] = $_`)
+			x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
+			x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
+			x.Contains(`$_[$x] = $_`)
 	}
 
 	m.Match(`$x := time.NewTimer($_); $*body`,
 		`$x = time.NewTimer($_); $*body`,
 		`var $x = time.NewTimer($_); $*body`,
 		`var $x $_ = time.NewTimer($_); $*body`).
-		Where(!m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
+		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
 		Report(`unstopped timer`).
 		At(m["x"])
 }
@@ -471,4 +374,17 @@ func simplifyErrorCheck(m dsl.Matcher) {
 		Report(`error check can be simplified in one line`).
 		Suggest(`if $err := $f($args); $err != nil { $body }`).
 		At(m["err"])
+}
+
+func syncPoolNonPtr(m dsl.Matcher) {
+	isPointer := func(x dsl.Var) bool {
+		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
+			x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
+			x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
+	}
+
+	m.Match(`$x.Put($y)`).
+		Where(m["x"].Type.Is("sync.Pool") && !isPointer(m["y"])).
+		Report(`non-pointer values in sync.Pool involve extra allocation`).
+		At(m["y"])
 }

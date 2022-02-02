@@ -2,6 +2,14 @@
 ### Added:
 - new rule unclosedResource
 - new rule unstoppedTimer
+- new rule syncPoolNonPtr
+
+### Changed:
+- simplified regexCompileInLoop
+- extended type assert rule
+
+### Fixed:
+- linter usage with enabled module vendoring
 
 ## [0.0.6] - 2022-01-19
 ### Added:

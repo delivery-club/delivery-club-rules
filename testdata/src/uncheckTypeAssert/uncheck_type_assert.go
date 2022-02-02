@@ -43,6 +43,27 @@ func uncheckedTypeAssert() {
 		_ = [...]interface{}{10: v.(int), 20: 0}        // want `\Qavoid unchecked type assertions as they can panic`
 		_ = [...]interface{}{10: 0, 20: v.(int), 30: 0} // want `\Qavoid unchecked type assertions as they can panic`
 	}
+
+	var ch chan string
+	ch <- v.(string) // want `\Qavoid unchecked type assertions as they can panic`
+
+	_ = map[string]string{ // want `\Qavoid unchecked type assertions as they can panic`
+		v.(string): "foo",
+	}
+
+	_ = map[string]string{ // want `\Qavoid unchecked type assertions as they can panic`
+		"foo":      "boo",
+		v.(string): "foo",
+	}
+
+	_ = map[string]string{ // want `\Qavoid unchecked type assertions as they can panic`
+		"foo":      "boo",
+		v.(string): "foo",
+		"bar":      "boo",
+	}
+	_ = map[string]string{ // want `\Qavoid unchecked type assertions as they can panic`
+		"bar": v.(string),
+	}
 }
 
 func negative() {
