@@ -318,15 +318,11 @@ func unclosedResource(m dsl.Matcher) {
 			x.Contains(`$_[$res] = $_`)
 	}
 
-	//isGlobalVar := func(x dsl.Var) bool {
-	//	return x. // plug //TODO add check for global var
-	//}
-
 	m.Match(`$res, $err := $open($*_); $*body`,
 		`$res, $err = $open($*_); $*body`,
 		`var $res, $err = $open($*_); $*body`,
 	).
-		Where(m["res"].Type.Implements(`io.Closer`) &&
+		Where(m["res"].Type.Implements(`io.Closer`) && !m["res"].Object.IsGlobal() &&
 			m["err"].Type.Implements(`error`) &&
 			(!m["body"].Contains(`$res.Close()`) && !varEscapeFunction(m["body"]))).
 		Report(`$res.Close() should be deferred right after the $open error check`).
@@ -359,8 +355,8 @@ func simplifyErrorCheck(m dsl.Matcher) {
 func syncPoolNonPtr(m dsl.Matcher) {
 	isPointer := func(x dsl.Var) bool {
 		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
-				x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
-				x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
+			x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
+			x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
 	}
 
 	m.Match(`$x.Put($y)`).
