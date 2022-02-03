@@ -388,3 +388,9 @@ func syncPoolNonPtr(m dsl.Matcher) {
 		Report(`non-pointer values in sync.Pool involve extra allocation`).
 		At(m["y"])
 }
+
+func unusedLocalConst(m dsl.Matcher) {
+	m.Match(`const $x = $_; $*body`, `const $x $_ = $_; $*body`).
+		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x`)).
+		Report(`unusable local constant`)
+}
