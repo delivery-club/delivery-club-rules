@@ -3,7 +3,7 @@
 - new rule unclosedResource
 - new rule unstoppedTimer
 - new rule syncPoolNonPtr
-- new rule unusedLocalConst
+- new rule uselessLocalConst
 
 ### Changed:
 - simplified regexCompileInLoop

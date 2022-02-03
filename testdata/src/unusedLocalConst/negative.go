@@ -1,4 +1,4 @@
-package unusedLocalConst
+package uselessLocalConst
 
 func negative() {
 	const bar = .3

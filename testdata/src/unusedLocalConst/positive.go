@@ -1,4 +1,4 @@
-package unusedLocalConst
+package uselessLocalConst
 
 func foo() {
 	const foo = ""         // want `useless local constant`

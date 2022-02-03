@@ -389,7 +389,7 @@ func syncPoolNonPtr(m dsl.Matcher) {
 		At(m["y"])
 }
 
-func unusedLocalConst(m dsl.Matcher) {
+func uselessLocalConst(m dsl.Matcher) {
 	m.Match(`const $x = $_; $*body`, `const $x $_ = $_; $*body`).
 		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x`)).
 		Report(`useless local constant`)
