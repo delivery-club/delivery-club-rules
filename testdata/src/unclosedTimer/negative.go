@@ -88,3 +88,21 @@ func negative9() {
 
 	print(<-f.C)
 }
+
+type MyStruct struct {
+	t *time.Timer
+}
+
+func (k MyStruct) negative10() {
+	kk := time.NewTimer(time.Second)
+	k.t = kk
+}
+
+func negative11() *time.Timer {
+	var k *time.Timer
+	k = time.NewTimer(time.Second)
+
+	kk := k
+
+	return kk
+}

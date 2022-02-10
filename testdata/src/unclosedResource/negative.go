@@ -125,3 +125,21 @@ func dataRace() {
 		defer f.Close()
 	}
 }
+
+type MyStruct struct {
+	f *os.File
+}
+
+func (m MyStruct) negative10() {
+	kk, _ := os.Open("123")
+	m.f = kk
+}
+
+func negative11() *os.File {
+	var k *os.File
+	k, _ = os.Open("123")
+
+	kk := k
+
+	return kk
+}
