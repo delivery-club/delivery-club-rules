@@ -318,7 +318,8 @@ func unclosedResource(m dsl.Matcher) {
 		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
 			x.Contains(`$_{$*_, $_: $res, $*_}`) || x.Contains(`$_ <- $res`) ||
 			x.Contains(`return $*_, $res, $*_`) || x.Contains(`$_[$_] = $res`) ||
-			x.Contains(`$_[$res] = $_`)
+			x.Contains(`$_[$res] = $_`) || x.Contains(`$_ = $res;`) || x.Contains(`$_ := $res;`) ||
+			x.Contains(`var $_ = $res;`) || x.Contains(`var $_ $_ = $res;`)
 	}
 
 	m.Match(`$res, $err := $open($*_); $*body`,
@@ -341,7 +342,8 @@ func unstoppedTimer(m dsl.Matcher) {
 		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
 			x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
 			x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
-			x.Contains(`$_[$x] = $_`)
+			x.Contains(`$_[$x] = $_`) || x.Contains(`$_ = $x;`) || x.Contains(`$_ := $x;`) ||
+			x.Contains(`var $_ = $x;`) || x.Contains(`var $_ $_ = $x;`)
 	}
 
 	m.Match(`$x := time.NewTimer($_); $*body`,
