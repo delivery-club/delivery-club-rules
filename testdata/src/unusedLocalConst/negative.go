@@ -1,5 +1,8 @@
 package uselessLocalConst
 
+const globalConst = "123"
+const GlobalConst = "123"
+
 func negative() {
 	const bar = .3
 	print(bar)
