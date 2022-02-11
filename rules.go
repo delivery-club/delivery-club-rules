@@ -163,6 +163,8 @@ func simplifyErrorReturn(m dsl.Matcher) {
 
 //doc:summary   Detects expressions that can be rewritten in form without 'if' usage
 //doc:tags      style
+//doc:before    err := myFunc(); if err != nil { return errors.WithMessage(err, "on myFunc:") }; return nil
+//doc:after     return errors.WithMessage(myFunc(), "on myFunc:")
 func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
@@ -361,6 +363,8 @@ func unstoppedTimer(m dsl.Matcher) {
 
 //doc:summary   Detects expressions that can be rewritten in one 'if' form
 //doc:tags      style
+//doc:before    err := myFunc(); if err != nil { println(err) }
+//doc:after     if err := myFunc(); err != nil { println(err) }
 func simplifyErrorCheck(m dsl.Matcher) {
 	m.Match(`$err := $f($*args); if $err != nil { $*body }`).
 		Where(m["err"].Type.Implements("error") &&
