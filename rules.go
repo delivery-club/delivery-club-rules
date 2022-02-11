@@ -10,8 +10,8 @@ var Bundle = dsl.Bundle{}
 
 //doc:summary   Detects unused formatting functionality
 //doc:tags      style
-//doc:before    fmt.Sprintf(42)
-//doc:after     fmt.Sprint(42)
+//doc:before    fmt.Sprintf("42")
+//doc:after     fmt.Sprint("42")
 func unusedFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
