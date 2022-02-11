@@ -37,7 +37,7 @@ func uncheckedTypeAssert(m dsl.Matcher) {
 
 //doc:summary   Detects copy big structs in loop body
 //doc:tags      performance
-//doc:before	for _, x := range xs { myfunc(x) } // for example var xs [][2048]string
+//doc:before    for _, x := range xs { myfunc(x) } // for example var xs [][2048]string
 //doc:after     for i := range xs { myfunc(xs[i]) }
 func rangeCopyVal(m dsl.Matcher) {
 	m.Match(`for $_, $x := range $xs { $*_ }`, `for $_, $x = range $xs { $*_ }`).
@@ -338,7 +338,7 @@ func unclosedResource(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased timers
-//doc:tags      diagnostic
+//doc:tags      performance
 //doc:before    s, _ := os.Open("foo.txt"); s.Read(body); return body
 //doc:after     s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unstoppedTimer(m dsl.Matcher) {
