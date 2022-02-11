@@ -8,6 +8,10 @@ import (
 
 var Bundle = dsl.Bundle{}
 
+//doc:summary	Detects unused formatting functionality
+//doc:tags		style
+//doc:before	fmt.Sprintf(42)
+//doc:after		fmt.Sprint(42)
 func unusedFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
@@ -15,6 +19,10 @@ func unusedFormatting(m dsl.Matcher) {
 		Report(`use function alternative without formatting`)
 }
 
+//doc:summary	Detects unchecked type assertation
+//doc:tags		diagnostic
+//doc:before	foo := bar.(string) // var bar interface{}
+//doc:after		foo, ok := bar.(string)
 func uncheckedTypeAssert(m dsl.Matcher) {
 	m.Match(
 		`$_ := $_.($_)`,
@@ -27,7 +35,10 @@ func uncheckedTypeAssert(m dsl.Matcher) {
 		Report(`avoid unchecked type assertions as they can panic`)
 }
 
-// from https://github.com/quasilyte/go-ruleguard
+//doc:summary	Detects copy big structs in loop body
+//doc:tags		performance
+//doc:before	for _, x := range xs { myfunc(x) } // for example var xs [][2048]string
+//doc:after		for i := range xs { myfunc(xs[i]) }
 func rangeCopyVal(m dsl.Matcher) {
 	m.Match(`for $_, $x := range $xs { $*_ }`, `for $_, $x = range $xs { $*_ }`).
 		Where((m["xs"].Type.Is("[]$_") || m["xs"].Type.Is("[$_]$_")) && m["x"].Type.Size >= 256).
@@ -35,7 +46,10 @@ func rangeCopyVal(m dsl.Matcher) {
 		At(m["x"])
 }
 
-// from https://github.com/quasilyte/go-ruleguard
+//doc:summary	Detects big array copy in loop
+//doc:tags		performance
+//doc:before	for _, x := range xs { myfunc(x) } // var xs [2048]string
+//doc:after		for _, x := range &xs { myfunc(x) }
 func rangeExprCopy(m dsl.Matcher) {
 	m.Match(`for $_, $_ := range $x { $*_ }`,
 		`for $_, $_ = range $x { $*_ }`).
@@ -45,14 +59,18 @@ func rangeExprCopy(m dsl.Matcher) {
 		Suggest(`&$x`)
 }
 
-// from https://github.com/quasilyte/uber-rules
+//doc:summary	Detects pointer to interface{}
+//doc:tags		performance
 func ifacePtr(m dsl.Matcher) {
 	m.Match(`*$x`).
 		Where(m["x"].Type.Underlying().Is(`interface{ $*_ }`)).
 		Report(`don't use pointers to an interface`)
 }
 
-//TODO: add rule cases
+//doc:summary	Detects non camel case naming strategy for functions, constants, types, variables
+//doc:tags		style
+//doc:before	type my_type struct {}
+//doc:after		type myType struct {}
 func camelCaseNaming(m dsl.Matcher) {
 	m.Match(
 		`func $x($*_) $*_ { $*_ }`,
@@ -73,6 +91,10 @@ func camelCaseNaming(m dsl.Matcher) {
 		At(m["x"])
 }
 
+//doc:summary	Detects general names for package
+//doc:tags		style
+//doc:before	package lib
+//doc:after		package concreteLib
 func notInformativePackageNaming(m dsl.Matcher) {
 	m.Match(`package $x`).
 		Where(m["x"].Text.Matches(`(^c|C|_(c|C))ommon([A-Z]|_|$|\d)`) ||
@@ -83,6 +105,10 @@ func notInformativePackageNaming(m dsl.Matcher) {
 		At(m["x"])
 }
 
+//doc:summary	Detects 'get' word in getter functions
+//doc:tags		style
+//doc:before	func (x myType) getValue() string { return x.v }
+//doc:after		func (x myType) value() string { return x.v }
 func getterNaming(m dsl.Matcher) {
 	m.Match(
 		`func ($x $_) $name($*_) $*_ { return $x.$_ }`,
@@ -103,6 +129,10 @@ func getterNaming(m dsl.Matcher) {
 //		At(m["name"])
 //}
 
+//doc:summary	Detects 'interface' word in interface declarations
+//doc:tags		style
+//doc:before	type interfaceDb interface { }
+//doc:after		type db interface { }
 func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
 	m.Match(`type $name interface{ $*_ }`).
 		Where(m["name"].Text.Matches(`(^i|I|_(i|I))nterface([A-Z]|_|$|\d)`)).
@@ -111,6 +141,10 @@ func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
 }
 
 // TODO add conditional suggest after implement https://github.com/quasilyte/go-ruleguard/issues/301
+//doc:summary	Detects expressions that can be rewritten in form without 'if' usage
+//doc:tags		style
+//doc:before	err := myFunc(); if err != nil { return err }; return nil
+//doc:after		err := myFunc(); return err
 func simplifyErrorReturn(m dsl.Matcher) {
 	m.Match(`if $*_, $err = $f($*args); $err != nil { return $err }; return nil`,
 		`if $*_, $err := $f($*args); $err != nil { return $err }; return nil`,
@@ -127,6 +161,8 @@ func simplifyErrorReturn(m dsl.Matcher) {
 		Report(`may be simplified to return error without if statement`)
 }
 
+//doc:summary	Detects expressions that can be rewritten in form without 'if' usage
+//doc:tags		style
 func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
@@ -165,6 +201,17 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 //		At(m["name"])
 //}
 
+//doc:summary	Detects loops inside functions that use defer
+//doc:tags		diagnostic
+//doc:before	for _, filename := range []string{"foo", "bar"} { f, err := os.Open(filename); defer f.Close() }
+//doc:after		func process(filename string) {
+//	 				f, err := os.Open(filename)
+//					defer f.Close()
+//				}
+//				/* ... */
+//				for _, filename := range []string{"foo", "bar"} {
+//					process(filename)
+//				}
 func deferInLoop(m dsl.Matcher) {
 	m.Match(
 		`for $*_; $*_; $*_ { $*_; defer func($*args) $*_ { $*_ }($*_); $*_ }`,
@@ -192,6 +239,10 @@ func deferInLoop(m dsl.Matcher) {
 		At(m["args"])
 }
 
+//doc:summary	Detects queries to database without context
+//doc:tags		diagnostic
+//doc:before	db.Exec(`SELECT 1`)
+//doc:after		db.ExecContext(ctx, `SELECT 1`)
 func queryWithoutContext(m dsl.Matcher) {
 	// in this rule we check all libraries which extend std sql lib
 	// but for check methods that have names different from the std sql,
@@ -231,6 +282,10 @@ func queryWithoutContext(m dsl.Matcher) {
 		At(m["db"])
 }
 
+//doc:summary	Detects regular expression compilation in loop
+//doc:tags		performance
+//doc:before	for { if regexp.MatchString("\d", "123") { /*...*/ } }
+//doc:after		dig := regexp.MustCompile("\d"); for { if dig.MatchString("123") { /*...*/ } }
 func regexpCompileInLoop(m dsl.Matcher) {
 	m.Match(
 		`for $*_; $*_; $*_ { $*_; $*_ = regexp.$method($s, $*args); $*_ }`,
@@ -254,6 +309,10 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
+//doc:summary	Detects unreleased resources
+//doc:tags		diagnostic
+//doc:before	s, _ := os.Open("foo.txt"); s.Read(body); return body
+//doc:after		s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unclosedResource(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
@@ -278,6 +337,10 @@ func unclosedResource(m dsl.Matcher) {
 		At(m["res"])
 }
 
+//doc:summary	Detects unreleased timers
+//doc:tags		diagnostic
+//doc:before	s, _ := os.Open("foo.txt"); s.Read(body); return body
+//doc:after		s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unstoppedTimer(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
@@ -296,6 +359,8 @@ func unstoppedTimer(m dsl.Matcher) {
 		At(m["x"])
 }
 
+//doc:summary	Detects expressions that can be rewritten in one 'if' form
+//doc:tags		style
 func simplifyErrorCheck(m dsl.Matcher) {
 	m.Match(`$err := $f($*args); if $err != nil { $*body }`).
 		Where(m["err"].Type.Implements("error") &&
@@ -316,6 +381,8 @@ func simplifyErrorCheck(m dsl.Matcher) {
 		Suggest(`if $err := $f($args); $err != nil { $body }`)
 }
 
+//doc:summary	Non-pointer values in sync.Pool involve extra allocation
+//doc:tags		performance
 func syncPoolNonPtr(m dsl.Matcher) {
 	isPointer := func(x dsl.Var) bool {
 		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
@@ -329,6 +396,8 @@ func syncPoolNonPtr(m dsl.Matcher) {
 		At(m["y"])
 }
 
+//doc:summary	Detects useless local constants
+//doc:tags		diagnostic
 func uselessLocalConst(m dsl.Matcher) {
 	m.Match(`const $x = $_; $*body`, `const $x $_ = $_; $*body`).
 		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x`)).
