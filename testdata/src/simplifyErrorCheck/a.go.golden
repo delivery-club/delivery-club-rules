@@ -8,13 +8,11 @@ func a() {
 		err error
 	)
 
-	err = bar.Error() // want "error check can be simplified in one line"
-	if err != nil {
+	if err = bar.Error(); err != nil {
 		return
 	}
 
-	err = bar.Error() // want "error check can be simplified in one line"
-	if err != nil {
+	if err = bar.Error(); err != nil {
 		return
 	}
 
@@ -27,15 +25,13 @@ func b() {
 		bar foo
 	)
 
-	err = bar.Error() // want "error check can be simplified in one line"
-	if err != nil {
+	if err = bar.Error(); err != nil {
 		return
 	}
 }
 
 func myFooFoo() {
-	var err = foo("").Error() // want "error check can be simplified in one line"
-	if err != nil {
+	if err := foo("").Error(); err != nil {
 		return
 	}
 

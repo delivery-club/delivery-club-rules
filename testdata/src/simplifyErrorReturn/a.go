@@ -17,8 +17,7 @@ func fooBar() error {
 }
 
 func barFoo() error {
-	var err error
-	if err = myBar(); err != nil { // want `may be simplified to return error without if statement`
+	if err := myBar(); err != nil { // want `may be simplified to return error without if statement`
 		return err
 	}
 
@@ -27,7 +26,7 @@ func barFoo() error {
 
 func myFuncBad() error {
 	if true {
-		if _, err := myBarSecond(); err != nil { // want `may be simplified to return error without if statement`
+		if _, err := myBarSecond(); err != nil { // want `\Qmay be simplified to return error without if statement`
 			return err
 		}
 
