@@ -144,7 +144,7 @@ func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
 //doc:summary	Detects expressions that can be rewritten in form without 'if' usage
 //doc:tags		style
 //doc:before	err := myFunc(); if err != nil { return err }; return nil
-//doc:after		err := myFunc(); return err
+//doc:after		return myFunc()
 func simplifyErrorReturn(m dsl.Matcher) {
 	m.Match(`if $*_, $err = $f($*args); $err != nil { return $err }; return nil`,
 		`if $*_, $err := $f($*args); $err != nil { return $err }; return nil`,
