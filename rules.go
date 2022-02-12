@@ -339,10 +339,10 @@ func unclosedResource(m dsl.Matcher) {
 		At(m["res"])
 }
 
-//doc:summary   Detects unreleased timers
+//doc:summary   Detects unreleased timer
 //doc:tags      performance
-//doc:before    s, _ := os.Open("foo.txt"); s.Read(body); return body
-//doc:after     s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
+//doc:before    timer := time.NewTimer(time.Second); select { case <-timer.C: return nil; default: return nil }
+//doc:after     timer := time.NewTimer(time.Second); defer timer.Stop(); select { case <-timer.C: return nil; default: return nil }
 func unstoppedTimer(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
 		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
@@ -358,6 +358,28 @@ func unstoppedTimer(m dsl.Matcher) {
 		`var $x $_ = time.NewTimer($_); $*body`).
 		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
 		Report(`unstopped timer`).
+		At(m["x"])
+}
+
+//doc:summary   Detects unreleased ticker
+//doc:tags      performance
+//doc:before    ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }
+//doc:after     ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }
+func unstoppedTicker(m dsl.Matcher) {
+	varEscapeFunction := func(x dsl.Var) bool {
+		return x.Contains(`$_($*_, $x, $*_)`) || x.Contains(`$_{$*_, $x, $*_}`) ||
+			x.Contains(`$_{$*_, $_: $x, $*_}`) || x.Contains(`$_ <- $x`) ||
+			x.Contains(`return $*_, $x, $*_`) || x.Contains(`$_[$_] = $x`) ||
+			x.Contains(`$_[$x] = $_`) || x.Contains(`$_ = $x;`) || x.Contains(`$_ := $x;`) ||
+			x.Contains(`var $_ = $x;`) || x.Contains(`var $_ $_ = $x;`)
+	}
+
+	m.Match(`$x := time.NewTicker($_); $*body`,
+		`$x = time.NewTicker($_); $*body`,
+		`var $x = time.NewTicker($_); $*body`,
+		`var $x $_ = time.NewTicker($_); $*body`).
+		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x.Stop()`) && !varEscapeFunction(m["body"])).
+		Report(`unstopped ticker`).
 		At(m["x"])
 }
 
