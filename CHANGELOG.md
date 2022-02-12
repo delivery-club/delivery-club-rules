@@ -8,6 +8,7 @@
 ### Changed:
 - simplified regexCompileInLoop
 - extended type assert rule
+- added documentation for each rule
 
 ### Fixed:
 - linter usage with enabled module vendoring
