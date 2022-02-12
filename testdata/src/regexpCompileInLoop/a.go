@@ -45,14 +45,10 @@ func warnings() {
 		}
 	}
 
-	for _, s := range []string{"1", "2"} {
-		r, err := regexp.CompilePOSIX(`qwe`) //want "don't compile regex in the loop, move it outside of the loop"
-		if err != nil {
-			print(err)
-		}
-
-		if r.MatchString(`123`) {
-			print(s)
-		}
+	for range []string{"1", "2"} {
+		var _, _ = regexp.CompilePOSIX(`qwe`) //want "don't compile regex in the loop, move it outside of the loop"
+	}
+	for range []string{"1", "2"} {
+		var _ *regexp.Regexp = regexp.MustCompilePOSIX(`qwe`) //want "don't compile regex in the loop, move it outside of the loop"
 	}
 }
