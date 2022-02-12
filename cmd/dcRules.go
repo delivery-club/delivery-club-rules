@@ -16,7 +16,7 @@ import (
 //go:generate go run ./precompile/precompile.go -rules ../rules.go -o ./precompile/rulesdata/rulesdata.go
 
 var (
-	flagTag     string
+	//flagTag     string
 	flagDebug   string
 	flagDisable string
 	flagEnable  string
@@ -28,7 +28,7 @@ var (
 var Version string
 
 func docString() string {
-	doc := "execute dynamic gogrep-based rules"
+	doc := "lint go files by DeliveryClub rules"
 	if Version == "" {
 		return doc
 	}

@@ -1,4 +1,5 @@
 GOPATH_DIR=`go env GOPATH`
+VERSION=`git describe --tags`
 
 test:
 	go test --count=1 -race .
@@ -14,3 +15,6 @@ install-linter:
 ci-generate:
 	go generate ./...
 	git diff --exit-code --quiet || (echo "Please run 'go generate ./...' to update precompiled rules."; false)
+
+build:
+	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules.go
