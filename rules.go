@@ -305,6 +305,22 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		`for $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 		`for $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 		`for range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
+
+		`for $*_; $*_; $*_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
 	).
 		At(m["s"]).
 		Where(m["s"].Const && m["method"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)).
