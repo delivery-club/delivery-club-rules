@@ -77,10 +77,10 @@ func init() {
 			if len(tags) > 0 {
 				for _, t := range g.DocTags {
 					if _, ok := tags[t]; ok {
-						inTags = false
 						break
 					}
 				}
+				inTags = false
 			}
 
 			switch {
