@@ -16,7 +16,7 @@ import (
 //go:generate go run ./precompile/precompile.go -rules ../rules.go -o ./precompile/rulesdata/rulesdata.go
 
 var (
-	//flagTag     string
+	flagTag     string
 	flagDebug   string
 	flagDisable string
 	flagEnable  string
@@ -45,12 +45,14 @@ var Analyzer = &analysis.Analyzer{
 var globalEngine *ruleguard.Engine
 
 func init() {
-	//Analyzer.Flags.StringVar(&flagTag, "tags", "", "comma separated rules tags")
+	Analyzer.Flags.StringVar(&flagDebug, "debug", "", "enable verbose mode for specific rule")
+	Analyzer.Flags.StringVar(&flagTag, "t", "", "comma-separated list of enabled tags")
 	Analyzer.Flags.StringVar(&flagDisable, "disabled", "", "comma-separated list of enabled groups or skip empty to enable everything")
 	Analyzer.Flags.StringVar(&flagEnable, "enabled", "<all>", "comma-separated list of disabled groups or skip empty to enable everything")
 
 	enabledGroups := make(map[string]bool)
 	disabledGroups := make(map[string]bool)
+	tags := make(map[string]bool)
 	for _, g := range strings.Split(flagDisable, ",") {
 		g = strings.TrimSpace(g)
 		disabledGroups[g] = true
@@ -61,25 +63,39 @@ func init() {
 			enabledGroups[g] = true
 		}
 	}
+	for _, tag := range strings.Split(flagTag, ",") {
+		tags[tag] = true
+	}
 
-	// TODO add filter by tags after https://github.com/quasilyte/go-ruleguard/pull/376
 	loadContext := &ruleguard.LoadContext{
 		Fset:       token.NewFileSet(),
 		DebugPrint: debugPrint,
-		GroupFilter: func(g string) bool {
+		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
-			enabled := flagEnable == "<all>" || enabledGroups[g]
+			enabled := flagEnable == "<all>" || enabledGroups[g.Name]
+			inTags := true
+			if len(tags) > 0 {
+				for _, t := range g.DocTags {
+					if _, ok := tags[t]; ok {
+						inTags = false
+						break
+					}
+				}
+			}
+
 			switch {
 			case !enabled:
 				whyDisabled = "not enabled by -enabled flag"
-			case disabledGroups[g]:
+			case disabledGroups[g.Name]:
 				whyDisabled = "disabled by -disable flag"
+			case !inTags:
+				whyDisabled = "disabled by -tags flag"
 			}
 			if flagDebug != "" {
 				if whyDisabled != "" {
-					debugPrint(fmt.Sprintf("(-) %s is %s", g, whyDisabled))
+					debugPrint(fmt.Sprintf("(-) %s is %s", g.Name, whyDisabled))
 				} else {
-					debugPrint(fmt.Sprintf("(+) %s is enabled", g))
+					debugPrint(fmt.Sprintf("(+) %s is enabled", g.Name))
 				}
 			}
 			return whyDisabled == ""
