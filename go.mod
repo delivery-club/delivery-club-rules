@@ -3,7 +3,7 @@ module github.com/delivery-club/delivery-club-rules
 go 1.17
 
 require (
-	github.com/quasilyte/go-ruleguard v0.3.16-0.20220202142729-cb19258d2ade
+	github.com/quasilyte/go-ruleguard v0.3.16-0.20220213074421-6aa060fab41a
 	github.com/quasilyte/go-ruleguard/dsl v0.3.16
 	golang.org/x/tools v0.1.9-0.20211228192929-ee1ca4ffc4da
 )
