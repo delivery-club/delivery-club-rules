@@ -15,8 +15,6 @@ import (
 	"github.com/delivery-club/delivery-club-rules/cmd/precompile/rulesdata"
 )
 
-//go:generate go run ./precompile/precompile.go -rules ../rules.go -o ./precompile/rulesdata/rulesdata.go
-
 var (
 	flagTag     string
 	flagDebug   string
