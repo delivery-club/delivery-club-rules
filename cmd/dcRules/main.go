@@ -1,25 +1,26 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/token"
-	"os"
+	"io/ioutil"
 	"strings"
+	"sync"
 
 	"github.com/quasilyte/go-ruleguard/ruleguard"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/singlechecker"
 
-	"github.com/delivery-club/delivery-club-rules/cmd/precompile/rulesdata"
+	"github.com/delivery-club/delivery-club-rules/precompile/rulesdata"
 )
-
-//go:generate go run ./precompile/precompile.go -rules ../rules.go -o ./precompile/rulesdata/rulesdata.go
 
 var (
 	flagTag     string
 	flagDebug   string
 	flagDisable string
 	flagEnable  string
+	flagRules   string
 )
 
 // Version contains extra version info.
@@ -42,14 +43,41 @@ var Analyzer = &analysis.Analyzer{
 	Run:  runAnalyzer,
 }
 
-var globalEngine *ruleguard.Engine
+var (
+	globalEngineMu      sync.Mutex
+	globalEngine        *ruleguard.Engine
+	globalEngineErrored bool
+)
 
 func init() {
-	Analyzer.Flags.StringVar(&flagDebug, "debug", "", "enable verbose mode for specific rule")
+	Analyzer.Flags.StringVar(&flagDebug, "d", "", "enable verbose mode for specific rule")
 	Analyzer.Flags.StringVar(&flagTag, "t", "", "comma-separated list of enabled tags")
 	Analyzer.Flags.StringVar(&flagDisable, "disabled", "", "comma-separated list of enabled groups or skip empty to enable everything")
 	Analyzer.Flags.StringVar(&flagEnable, "enabled", "<all>", "comma-separated list of disabled groups or skip empty to enable everything")
+	Analyzer.Flags.StringVar(&flagRules, "rules", "", "comma-separated list of rules files")
+}
 
+func prepareEngine() error {
+	if globalEngine != nil {
+		return nil
+	}
+
+	globalEngineMu.Lock()
+	defer globalEngineMu.Unlock()
+
+	if globalEngineErrored {
+		return nil
+	}
+
+	if err := newEngine(); err != nil {
+		globalEngineErrored = true
+		return err
+	}
+
+	return nil
+}
+
+func newEngine() error {
 	enabledGroups := make(map[string]bool)
 	disabledGroups := make(map[string]bool)
 	tags := make(map[string]bool)
@@ -67,14 +95,14 @@ func init() {
 		tags[tag] = true
 	}
 
-	loadContext := &ruleguard.LoadContext{
+	ctx := &ruleguard.LoadContext{
 		Fset:       token.NewFileSet(),
 		DebugPrint: debugPrint,
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
 			enabled := flagEnable == "<all>" || enabledGroups[g.Name]
 			inTags := true
-			if len(tags) > 0 {
+			if flagTag != "" {
 				for _, t := range g.DocTags {
 					if _, ok := tags[t]; ok {
 						break
@@ -105,10 +133,26 @@ func init() {
 	globalEngine = ruleguard.NewEngine()
 	globalEngine.InferBuildContext()
 
-	if err := globalEngine.LoadFromIR(loadContext, "rulesdata.go", rulesdata.PrecompiledRules); err != nil {
-		fmt.Println("on load ir rules: ", err)
-		os.Exit(1)
+	if err := globalEngine.LoadFromIR(ctx, "rulesdata.go", rulesdata.PrecompiledRules); err != nil {
+		return fmt.Errorf("on load ir rules: %s", err)
 	}
+
+	if flagRules != "" {
+		filenames := strings.Split(flagRules, ",")
+		for _, filename := range filenames {
+			filename = strings.TrimSpace(filename)
+			data, err := ioutil.ReadFile(filename)
+			if err != nil {
+				return fmt.Errorf("read rules file: %v", err)
+			}
+
+			if err = globalEngine.Load(ctx, filename, bytes.NewReader(data)); err != nil {
+				return fmt.Errorf("parse rules file: %v", err)
+			}
+		}
+	}
+
+	return nil
 }
 
 func main() {
@@ -116,6 +160,14 @@ func main() {
 }
 
 func runAnalyzer(pass *analysis.Pass) (interface{}, error) {
+	if err := prepareEngine(); err != nil {
+		return nil, err
+	}
+
+	if globalEngine == nil {
+		return nil, nil
+	}
+
 	ctx := &ruleguard.RunContext{
 		Debug:      flagDebug,
 		DebugPrint: debugPrint,

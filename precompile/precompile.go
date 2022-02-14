@@ -21,6 +21,8 @@ import (
 	"github.com/quasilyte/go-ruleguard/ruleguard/irprint"
 )
 
+//go:generate go run ./precompile.go -rules ../rules.go -o rulesdata/rulesdata.go
+
 // This program generates a loadable IR for ruleguard
 // so we don't have to load the rules from AST and typecheck
 // them every time.

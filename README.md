@@ -9,7 +9,7 @@ Delivery club go rules linter
 ### How to use:
 Full installation example: https://github.com/peakle/dc-rules-example
 
-1. Install this and DSL package:
+1. Install rules:
       ```shell
       go get -v github.com/delivery-club/delivery-club-rules
       ```
