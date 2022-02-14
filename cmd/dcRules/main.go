@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/token"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -20,6 +22,7 @@ var (
 	flagDebug   string
 	flagDisable string
 	flagEnable  string
+	flagRules   string
 )
 
 // Version contains extra version info.
@@ -49,6 +52,7 @@ func init() {
 	Analyzer.Flags.StringVar(&flagTag, "t", "", "comma-separated list of enabled tags")
 	Analyzer.Flags.StringVar(&flagDisable, "disabled", "", "comma-separated list of enabled groups or skip empty to enable everything")
 	Analyzer.Flags.StringVar(&flagEnable, "enabled", "<all>", "comma-separated list of disabled groups or skip empty to enable everything")
+	Analyzer.Flags.StringVar(&flagRules, "rules", "", "comma-separated list of rules files")
 
 	enabledGroups := make(map[string]bool)
 	disabledGroups := make(map[string]bool)
@@ -67,7 +71,7 @@ func init() {
 		tags[tag] = true
 	}
 
-	loadContext := &ruleguard.LoadContext{
+	ctx := &ruleguard.LoadContext{
 		Fset:       token.NewFileSet(),
 		DebugPrint: debugPrint,
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
@@ -105,9 +109,26 @@ func init() {
 	globalEngine = ruleguard.NewEngine()
 	globalEngine.InferBuildContext()
 
-	if err := globalEngine.LoadFromIR(loadContext, "rulesdata.go", rulesdata.PrecompiledRules); err != nil {
+	if err := globalEngine.LoadFromIR(ctx, "rulesdata.go", rulesdata.PrecompiledRules); err != nil {
 		fmt.Println("on load ir rules: ", err)
 		os.Exit(1)
+	}
+
+	if flagRules != "" {
+		filenames := strings.Split(flagRules, ",")
+		for _, filename := range filenames {
+			filename = strings.TrimSpace(filename)
+			data, err := ioutil.ReadFile(filename)
+			if err != nil {
+				fmt.Printf("read rules file: %v", err)
+				os.Exit(1)
+			}
+
+			if err = globalEngine.Load(ctx, filename, bytes.NewReader(data)); err != nil {
+				fmt.Printf("parse rules file: %v", err)
+				os.Exit(1)
+			}
+		}
 	}
 }
 
