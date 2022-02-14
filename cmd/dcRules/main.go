@@ -12,7 +12,7 @@ import (
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/singlechecker"
 
-	"github.com/delivery-club/delivery-club-rules/cmd/precompile/rulesdata"
+	"github.com/delivery-club/delivery-club-rules/precompile/rulesdata"
 )
 
 var (
