@@ -51,7 +51,6 @@ var (
 
 func init() {
 	Analyzer.Flags.StringVar(&flagDebug, "d", "", "enable verbose mode for specific rule")
-	Analyzer.Flags.StringVar(&flagTag, "t", "", "comma-separated list of enabled tags")
 	Analyzer.Flags.StringVar(&flagDisable, "disabled", "", "comma-separated list of enabled groups or skip empty to enable everything")
 	Analyzer.Flags.StringVar(&flagEnable, "enabled", "<all>", "comma-separated list of disabled groups or skip empty to enable everything")
 	Analyzer.Flags.StringVar(&flagRules, "rules", "", "comma-separated list of rules files")
@@ -80,19 +79,44 @@ func prepareEngine() error {
 func newEngine() error {
 	enabledGroups := make(map[string]bool)
 	disabledGroups := make(map[string]bool)
-	tags := make(map[string]bool)
+	enabledTags := make(map[string]bool)
+	disabledTags := make(map[string]bool)
+
 	for _, g := range strings.Split(flagDisable, ",") {
 		g = strings.TrimSpace(g)
+		if t := strings.Split(g, "#"); len(t) == 2 {
+			disabledTags[t[1]] = true
+			continue
+		}
+
 		disabledGroups[g] = true
 	}
 	if flagEnable != "<all>" {
 		for _, g := range strings.Split(flagEnable, ",") {
 			g = strings.TrimSpace(g)
+			if t := strings.Split(g, "#"); len(t) == 2 {
+				enabledTags[t[1]] = true
+				continue
+			}
+
 			enabledGroups[g] = true
 		}
 	}
-	for _, tag := range strings.Split(flagTag, ",") {
-		tags[tag] = true
+	inDisabledByTags := func(g *ruleguard.GoRuleGroup) bool {
+		for _, t := range g.DocTags {
+			if disabledTags[t] {
+				return true
+			}
+		}
+		return false
+	}
+	inEnabledByTags := func(g *ruleguard.GoRuleGroup) bool {
+		for _, t := range g.DocTags {
+			if enabledTags[t] {
+				return true
+			}
+		}
+		return false
 	}
 
 	ctx := &ruleguard.LoadContext{
@@ -100,24 +124,17 @@ func newEngine() error {
 		DebugPrint: debugPrint,
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
-			enabled := flagEnable == "<all>" || enabledGroups[g.Name]
-			inTags := flagTag == ""
-			if !inTags {
-				for _, t := range g.DocTags {
-					if _, ok := tags[t]; ok {
-						inTags = true
-						break
-					}
-				}
-			}
+			enabled := len(enabledGroups) == 0 || enabledGroups[g.Name]
 
 			switch {
 			case !enabled:
 				whyDisabled = "not enabled by -enabled flag"
 			case disabledGroups[g.Name]:
 				whyDisabled = "disabled by -disable flag"
-			case !inTags:
-				whyDisabled = "disabled by -tags flag"
+			case len(enabledTags) != 0 && !inEnabledByTags(g):
+				whyDisabled = "not enabled by tags in -enable flag"
+			case inDisabledByTags(g):
+				whyDisabled = "disabled by tags in -disable flag"
 			}
 			if flagDebug != "" {
 				if whyDisabled != "" {
