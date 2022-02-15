@@ -58,12 +58,12 @@ func init() {
 }
 
 func prepareEngine() error {
+	globalEngineMu.Lock()
+	defer globalEngineMu.Unlock()
+
 	if globalEngine != nil {
 		return nil
 	}
-
-	globalEngineMu.Lock()
-	defer globalEngineMu.Unlock()
 
 	if globalEngineErrored {
 		return nil
@@ -101,14 +101,14 @@ func newEngine() error {
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
 			enabled := flagEnable == "<all>" || enabledGroups[g.Name]
-			inTags := true
-			if flagTag != "" {
+			inTags := flagTag == ""
+			if !inTags {
 				for _, t := range g.DocTags {
 					if _, ok := tags[t]; ok {
+						inTags = true
 						break
 					}
 				}
-				inTags = false
 			}
 
 			switch {
