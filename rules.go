@@ -445,3 +445,20 @@ func uselessLocalConst(m dsl.Matcher) {
 		Where(!m["x"].Object.IsGlobal() && !m["body"].Contains(`$x`)).
 		Report(`useless local constant`)
 }
+
+//doc:summary   Detects variables assigment before return that can be simplified
+//doc:tags      style
+func oneLineReturn(m dsl.Matcher) {
+	isPointer := func(x dsl.Var) bool {
+		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||
+			x.Type.Underlying().Is("map[$_]$_") || x.Type.Underlying().Is("interface{$*_}") ||
+			x.Type.Underlying().Is(`func($*_) $*_`) || x.Type.Underlying().Is(`unsafe.Pointer`)
+	}
+
+	m.Match(
+		`var $x = $v; return $x`,
+		`$x := $v; return $x`,
+	).
+		Where(!isPointer(m["x"])).
+		Suggest(`return $v`)
+}

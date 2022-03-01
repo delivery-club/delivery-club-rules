@@ -1,0 +1,18 @@
+package oneLineReturn
+
+func myFunc() string                     { return "" }
+func myFuncWithArgs(s, ss string) string { return s + ss }
+
+func warning1() string {
+	if true {
+		return ""
+	}
+	if true {
+		return myFunc()
+	}
+	if true {
+		return myFuncWithArgs("12", "34")
+	}
+
+	return ""
+}

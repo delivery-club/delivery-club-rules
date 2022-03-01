@@ -7,6 +7,7 @@
 - new rule unstoppedTicker
 - new rule syncPoolNonPtr
 - new rule uselessLocalConst
+- new rule oneLineReturn
 
 ### Changed:
 
