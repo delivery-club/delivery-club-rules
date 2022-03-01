@@ -1564,6 +1564,104 @@ var PrecompiledRules = &ir.File{
 				},
 			}},
 		},
+		{
+			Line:        451,
+			Name:        "oneLineReturn",
+			MatcherName: "m",
+			DocTags:     []string{"style"},
+			DocSummary:  "Detects variables assigment before return that can be simplified",
+			Rules: []ir.Rule{{
+				Line: 458,
+				SyntaxPatterns: []ir.PatternString{
+					{Line: 459, Value: "var $x = $v; return $x"},
+					{Line: 460, Value: "$x := $v; return $x"},
+				},
+				ReportTemplate:  "suggestion: return $v",
+				SuggestTemplate: "return $v",
+				WhereExpr: ir.FilterExpr{
+					Line: 462,
+					Op:   ir.FilterNotOp,
+					Src:  "!isPointer(m[\"x\"])",
+					Args: []ir.FilterExpr{{
+						Line: 462,
+						Op:   ir.FilterOrOp,
+						Src:  "isPointer(m[\"x\"])",
+						Args: []ir.FilterExpr{
+							{
+								Line: 462,
+								Op:   ir.FilterOrOp,
+								Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"interface{$*_}\") ||\n\n\tm[\"x\"].Type.Underlying().Is(`func($*_) $*_`)",
+								Args: []ir.FilterExpr{
+									{
+										Line: 462,
+										Op:   ir.FilterOrOp,
+										Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"interface{$*_}\")",
+										Args: []ir.FilterExpr{
+											{
+												Line: 462,
+												Op:   ir.FilterOrOp,
+												Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\")",
+												Args: []ir.FilterExpr{
+													{
+														Line: 462,
+														Op:   ir.FilterOrOp,
+														Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\")",
+														Args: []ir.FilterExpr{
+															{
+																Line:  462,
+																Op:    ir.FilterVarTypeUnderlyingIsOp,
+																Src:   "m[\"x\"].Type.Underlying().Is(\"*$_\")",
+																Value: "x",
+																Args:  []ir.FilterExpr{{Line: 453, Op: ir.FilterStringOp, Src: "\"*$_\"", Value: "*$_"}},
+															},
+															{
+																Line:  462,
+																Op:    ir.FilterVarTypeUnderlyingIsOp,
+																Src:   "m[\"x\"].Type.Underlying().Is(\"chan $_\")",
+																Value: "x",
+																Args:  []ir.FilterExpr{{Line: 453, Op: ir.FilterStringOp, Src: "\"chan $_\"", Value: "chan $_"}},
+															},
+														},
+													},
+													{
+														Line:  462,
+														Op:    ir.FilterVarTypeUnderlyingIsOp,
+														Src:   "m[\"x\"].Type.Underlying().Is(\"map[$_]$_\")",
+														Value: "x",
+														Args:  []ir.FilterExpr{{Line: 454, Op: ir.FilterStringOp, Src: "\"map[$_]$_\"", Value: "map[$_]$_"}},
+													},
+												},
+											},
+											{
+												Line:  462,
+												Op:    ir.FilterVarTypeUnderlyingIsOp,
+												Src:   "m[\"x\"].Type.Underlying().Is(\"interface{$*_}\")",
+												Value: "x",
+												Args:  []ir.FilterExpr{{Line: 454, Op: ir.FilterStringOp, Src: "\"interface{$*_}\"", Value: "interface{$*_}"}},
+											},
+										},
+									},
+									{
+										Line:  462,
+										Op:    ir.FilterVarTypeUnderlyingIsOp,
+										Src:   "m[\"x\"].Type.Underlying().Is(`func($*_) $*_`)",
+										Value: "x",
+										Args:  []ir.FilterExpr{{Line: 455, Op: ir.FilterStringOp, Src: "`func($*_) $*_`", Value: "func($*_) $*_"}},
+									},
+								},
+							},
+							{
+								Line:  462,
+								Op:    ir.FilterVarTypeUnderlyingIsOp,
+								Src:   "m[\"x\"].Type.Underlying().Is(`unsafe.Pointer`)",
+								Value: "x",
+								Args:  []ir.FilterExpr{{Line: 455, Op: ir.FilterStringOp, Src: "`unsafe.Pointer`", Value: "unsafe.Pointer"}},
+							},
+						},
+					}},
+				},
+			}},
+		},
 	},
 }
 
