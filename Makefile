@@ -1,5 +1,5 @@
-GOPATH_DIR=`go env GOPATH`
-VERSION=`git describe --tags`
+GOPATH_DIR=$(shell go env GOPATH)
+VERSION=$(shell git describe --tags)
 
 test:
 	go test --count=1 -race .
@@ -17,4 +17,5 @@ ci-generate:
 	git diff --exit-code --quiet || (echo "Please run 'go generate ./...' to update precompiled rules."; false)
 
 build:
-	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules.go
+	go generate ./...
+	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
