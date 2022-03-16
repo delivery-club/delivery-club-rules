@@ -120,8 +120,9 @@ func newEngine() error {
 	}
 
 	ctx := &ruleguard.LoadContext{
-		Fset:       token.NewFileSet(),
-		DebugPrint: debugPrint,
+		DebugImports: flagDebug != "",
+		Fset:         token.NewFileSet(),
+		DebugPrint:   debugPrint,
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
 			enabled := len(enabledGroups) == 0 || enabledGroups[g.Name]
