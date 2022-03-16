@@ -17,6 +17,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/quasilyte/go-ruleguard/ruleguard/ir"
 	"github.com/quasilyte/go-ruleguard/ruleguard/irconv"
 	"github.com/quasilyte/go-ruleguard/ruleguard/irprint"
 )
@@ -75,12 +76,13 @@ func precompile() error {
 	irfile.CustomDecls = nil
 
 	// described in https://github.com/delivery-club/delivery-club-rules/issues/43#issuecomment-1069549003 // TODO delete after fix
-	for i, rule := range irfile.RuleGroups {
-		if len(rule.Imports) > 0 && rule.Imports[0].Name == "pkg" {
-			irfile.RuleGroups = append(irfile.RuleGroups[0:i], irfile.RuleGroups[i+1:]...)
-			break
+	var rules []ir.RuleGroup
+	for _, rule := range irfile.RuleGroups {
+		if len(rule.Imports) == 0 {
+			rules = append(rules, rule)
 		}
 	}
+	irfile.RuleGroups = rules
 
 	var rulesText bytes.Buffer
 	irprint.File(&rulesText, irfile)

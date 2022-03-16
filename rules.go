@@ -13,9 +13,18 @@ var Bundle = dsl.Bundle{}
 //doc:before    fmt.Sprintf("42")
 //doc:after     fmt.Sprint("42")
 func unusedFormatting(m dsl.Matcher) {
+	m.Match(`fmt.Sprintf($_)`).
+		Report(`use function alternative without formatting`)
+}
+
+//doc:summary   Detects unused formatting functionality
+//doc:tags      style
+//doc:before    errors.WithMessagef(err, "on example")
+//doc:after     errors.WithMessage(err, "on example")
+func unusedErrorsFormatting(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
-	m.Match(`fmt.Sprintf($_)`, `errors.WithMessagef($_, $_)`, `errors.Wrapf($_, $_)`, `errors.Errorf($_)`).
+	m.Match(`errors.WithMessagef($_, $_)`, `errors.Wrapf($_, $_)`, `errors.Errorf($_)`).
 		Report(`use function alternative without formatting`)
 }
 
