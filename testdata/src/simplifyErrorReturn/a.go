@@ -1,5 +1,9 @@
 package simplifyReturn
 
+import (
+	"errors"
+)
+
 func myBar() error {
 	return nil
 }
@@ -74,6 +78,25 @@ func myFuncThree() error {
 
 	var err error
 	if err = myBar(); err != nil { // want `may be simplified to return error without if statement`
+		return err
+	}
+
+	return nil
+}
+
+type myStruct struct {
+	Err error
+}
+
+func (m *myStruct) Call() *myStruct {
+	m.Err = errors.New("123")
+	return m
+}
+
+func testField() error {
+	l := myStruct{}
+
+	if err := l.Call().Err; err != nil { // want `may be simplified to return error without if statement`
 		return err
 	}
 

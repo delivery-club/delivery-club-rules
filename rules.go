@@ -155,16 +155,16 @@ func interfaceWordInInterfaceDeclaration(m dsl.Matcher) {
 //doc:before    err := myFunc(); if err != nil { return err }; return nil
 //doc:after     return myFunc()
 func simplifyErrorReturn(m dsl.Matcher) {
-	m.Match(`if $*_, $err = $f($*args); $err != nil { return $err }; return nil`,
-		`if $*_, $err := $f($*args); $err != nil { return $err }; return nil`,
-		`$*_, $err = $f($*args); if $err != nil { return $err }; return nil`,
-		`var $*_, $err = $f($*args); if $err != nil { return $err }; return nil`,
-		`$*_, $err := $f($*args); if $err != nil { return $err }; return nil`,
-		`if $*_, $err = $f($*args); $err != nil { return $err }; return $err`,
-		`if $*_, $err := $f($*args); $err != nil { return $err }; return $err`,
-		`$*_, $err = $f($*args); if $err != nil { return $err }; return $err`,
-		`var $*_, $err = $f($*args); if $err != nil { return $err }; return $err`,
-		`$*_, $err := $f($*args); if $err != nil { return $err }; return $err`,
+	m.Match(`if $*_, $err = $_; $err != nil { return $err }; return nil`,
+		`if $*_, $err := $_; $err != nil { return $err }; return nil`,
+		`$*_, $err = $_; if $err != nil { return $err }; return nil`,
+		`var $*_, $err = $_; if $err != nil { return $err }; return nil`,
+		`$*_, $err := $_; if $err != nil { return $err }; return nil`,
+		`if $*_, $err = $_; $err != nil { return $err }; return $err`,
+		`if $*_, $err := $_; $err != nil { return $err }; return $err`,
+		`$*_, $err = $_; if $err != nil { return $err }; return $err`,
+		`var $*_, $err = $_; if $err != nil { return $err }; return $err`,
+		`$*_, $err := $_; if $err != nil { return $err }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`)
@@ -178,16 +178,16 @@ func simplifyErrorReturnWithErrorsPkg(m dsl.Matcher) {
 	m.Import("github.com/pkg/errors")
 
 	m.Match(
-		`if $*_, $err = $f($*args); $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
-		`if $*_, $err := $f($*args); $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
-		`$*_, $err = $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
-		`var $*_, $err = $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
-		`$*_, $err := $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
-		`if $*_, $err = $f($*args); $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
-		`if $*_, $err := $f($*args); $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
-		`$*_, $err = $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
-		`var $*_, $err = $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
-		`$*_, $err := $f($*args); if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
+		`if $*_, $err = $_; $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
+		`if $*_, $err := $_; $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
+		`$*_, $err = $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
+		`var $*_, $err = $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
+		`$*_, $err := $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return nil`,
+		`if $*_, $err = $_; $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
+		`if $*_, $err := $_; $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
+		`$*_, $err = $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
+		`var $*_, $err = $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
+		`$*_, $err := $_; if $err != nil { return errors.$_($err, $*methodArgs) }; return $err`,
 	).
 		Where(m["err"].Type.Implements("error")).
 		Report(`may be simplified to return error without if statement`)
