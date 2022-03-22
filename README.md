@@ -34,7 +34,7 @@ Full installation example: https://github.com/peakle/dc-rules-example
     2. Like explicit check WITHOUT golangci-lint:
         1. install binary by `curl` or `go install`:
        ```shell
-       curl -sSfL https://raw.githubusercontent.com/delivery-club/delivery-club-rules/master/install.sh | sh -s -- -d -b ${YOUR_DIR} latest
+       curl -sSfL https://raw.githubusercontent.com/delivery-club/delivery-club-rules/master/releaser/install.sh | sh -s -- -d -b ${YOUR_DIR} latest
        ```
        OR
        ``` shell
