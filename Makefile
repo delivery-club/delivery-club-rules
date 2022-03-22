@@ -21,5 +21,7 @@ install:
 	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
 
 build-release:
-	mkdir -p bin
 	go build -o bin/dcRules -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
+
+draft-release:
+	go run releaser/release.go -version ${VERSION}

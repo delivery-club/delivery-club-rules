@@ -42,6 +42,12 @@ func main() {
 		{"windows", "arm64"},
 	}
 
+	err := os.Mkdir(releaseDir, 0755)
+	if err != nil && err != os.ErrExist {
+		log.Printf("on release dir: %s", err)
+		return
+	}
+
 	checksums, err := os.Create(filepath.Join(releaseDir, projectName+"-"+*version+"-checksums.txt"))
 	if err != nil {
 		log.Printf("on create checksums: %s", err)
@@ -78,7 +84,7 @@ func prepareArchive(checksums io.Writer, platform platformInfo, version string) 
 		}
 	}
 
-	archiveName := projectName + version + "-" + platform.String() + ".zip"
+	archiveName := projectName + "-" + version + "-" + platform.String() + ".zip"
 	zipCmd := exec.Command("zip", archiveName, filename)
 	zipCmd.Dir = releaseDir
 	log.Printf("creating %s archive", archiveName)
