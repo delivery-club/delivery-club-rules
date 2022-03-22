@@ -16,6 +16,10 @@ ci-generate:
 	go generate ./...
 	git diff --exit-code --quiet || (echo "Please run 'go generate ./...' to update precompiled rules."; false)
 
-build:
+install:
 	go generate ./...
 	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
+
+build-release:
+	mkdir -p bin
+	go build -o bin/dcRules -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
