@@ -20,7 +20,7 @@ install:
 	go generate ./...
 	go install -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
 
-build-release:
+build:
 	go build -o bin/dcRules -ldflags "-s -w -X ./cmd/dcRules.VERSION=${VERSION}" ./cmd/dcRules
 
 draft-release:

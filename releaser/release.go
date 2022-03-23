@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -43,7 +44,7 @@ func main() {
 	}
 
 	err := os.Mkdir(releaseDir, 0755)
-	if err != nil && err != os.ErrExist {
+	if err != nil && !errors.Is(err, os.ErrExist) {
 		log.Printf("on release dir: %s", err)
 		return
 	}
@@ -56,7 +57,7 @@ func main() {
 	defer checksums.Close()
 
 	for _, platform := range platforms {
-		if err := prepareArchive(checksums, platform, *version); err != nil {
+		if err = prepareArchive(checksums, platform, *version); err != nil {
 			log.Printf("error: build %s: %v", platform, err)
 			return
 		}
@@ -88,7 +89,7 @@ func prepareArchive(checksums io.Writer, platform platformInfo, version string) 
 	zipCmd := exec.Command("zip", archiveName, filename)
 	zipCmd.Dir = releaseDir
 	log.Printf("creating %s archive", archiveName)
-	if out, err := zipCmd.CombinedOutput(); err != nil {
+	if out, err = zipCmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("make archive: %v: %s", err, out)
 	}
 
