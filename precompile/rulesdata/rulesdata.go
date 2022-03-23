@@ -500,11 +500,11 @@ var PrecompiledRules = &ir.File{
 			Rules: []ir.Rule{{
 				Line: 352,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 352, Value: "$res, $err := $open($*_); $*body"},
-					{Line: 353, Value: "$res, $err = $open($*_); $*body"},
-					{Line: 354, Value: "var $res, $err = $open($*_); $*body"},
+					{Line: 352, Value: "$res, $err := $_($*_); $*body"},
+					{Line: 353, Value: "$res, $err = $_($*_); $*body"},
+					{Line: 354, Value: "var $res, $err = $_($*_); $*body"},
 				},
-				ReportTemplate: "$res.Close() should be deferred right after the $open error check",
+				ReportTemplate: "$res.Close() should be deferred right after the resource creation",
 				WhereExpr: ir.FilterExpr{
 					Line: 357,
 					Op:   ir.FilterAndOp,

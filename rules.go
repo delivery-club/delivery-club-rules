@@ -349,9 +349,9 @@ func unclosedResource(m dsl.Matcher) {
 			x.Contains(`var $_ = $res;`) || x.Contains(`var $_ $_ = $res;`)
 	}
 
-	m.Match(`$res, $err := $open($*_); $*body`,
-		`$res, $err = $open($*_); $*body`,
-		`var $res, $err = $open($*_); $*body`,
+	m.Match(`$res, $err := $_($*_); $*body`,
+		`$res, $err = $_($*_); $*body`,
+		`var $res, $err = $_($*_); $*body`,
 	).
 		Where(
 			m["res"].Type.Implements(`io.Closer`) &&
@@ -360,7 +360,7 @@ func unclosedResource(m dsl.Matcher) {
 				!m["body"].Contains(`$res.Close()`) &&
 				!varEscapeFunction(m["body"]),
 		).
-		Report(`$res.Close() should be deferred right after the $open error check`).
+		Report(`$res.Close() should be deferred right after the resource creation`).
 		At(m["res"])
 }
 
