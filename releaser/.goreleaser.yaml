@@ -1,0 +1,36 @@
+project_name: delivery-club-rules
+
+release:
+  github:
+    owner: delivery-club
+    name: delivery-club-rules
+
+builds:
+  - binary: dcRules
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - windows
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/dcRules
+
+archives:
+  - format: zip
+    name_template: '{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}'
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: '{{ .ProjectName }}-{{ .Version }}-checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'

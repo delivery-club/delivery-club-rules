@@ -16,3 +16,6 @@
 .idea
 
 test-projects
+
+dist/
+bin
