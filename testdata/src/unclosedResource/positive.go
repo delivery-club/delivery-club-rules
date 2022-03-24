@@ -98,14 +98,14 @@ func (m MyStr) String() string {
 	return m.string
 }
 
-func (Creator) OpenMyStruct() (MyStr, error) {
+func (Creator) OpenMyStruct(arg string) (MyStr, error) {
 	return MyStr{}, nil
 }
 
 func NewCreator() Creator { return Creator{} }
 
 func warning8() {
-	m, _ := NewCreator().OpenMyStruct() // want `\Qm.Close() should be deferred right after the resource creation`
+	m, _ := NewCreator().OpenMyStruct("") // want `\Qm.Close() should be deferred right after the resource creation`
 
 	print(m.String())
 }
@@ -114,7 +114,7 @@ func warning9() {
 	var err error
 	cr := NewCreator()
 
-	cr.m, err = cr.OpenMyStruct() // want `\Qcr.m.Close() should be deferred right after the resource creation`
+	cr.m, err = cr.OpenMyStruct("foo") // want `\Qcr.m.Close() should be deferred right after the resource creation`
 	if err != nil {
 		return
 	}

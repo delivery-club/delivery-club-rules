@@ -938,7 +938,7 @@ var PrecompiledRules = &ir.File{
 			Line:        393,
 			Name:        "unstoppedTicker",
 			MatcherName: "m",
-			DocTags:     []string{"performance"},
+			DocTags:     []string{"performance", "diagnostic"},
 			DocSummary:  "Detects unreleased ticker",
 			DocBefore:   "ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }",
 			DocAfter:    "ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }",

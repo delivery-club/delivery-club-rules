@@ -387,7 +387,7 @@ func unstoppedTimer(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased ticker
-//doc:tags      performance
+//doc:tags      performance diagnostic
 //doc:before    ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }
 //doc:after     ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }
 func unstoppedTicker(m dsl.Matcher) {
