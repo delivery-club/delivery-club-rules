@@ -337,7 +337,7 @@ func regexpCompileInLoop(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased resources
-//doc:tags      diagnostic
+//doc:tags      experimental diagnostic
 //doc:before    s, _ := os.Open("foo.txt"); s.Read(body); return body
 //doc:after     s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unclosedResource(m dsl.Matcher) {

@@ -493,7 +493,7 @@ var PrecompiledRules = &ir.File{
 			Line:        343,
 			Name:        "unclosedResource",
 			MatcherName: "m",
-			DocTags:     []string{"diagnostic"},
+			DocTags:     []string{"experimental", "diagnostic"},
 			DocSummary:  "Detects unreleased resources",
 			DocBefore:   "s, _ := os.Open(\"foo.txt\"); s.Read(body); return body",
 			DocAfter:    "s, _ := os.Open(\"foo.txt\"); defer s.Close(); s.Read(body); return body",

@@ -85,7 +85,10 @@ func warning7() {
 type MyStr struct {
 	string
 }
-type Creator struct{}
+
+type Creator struct {
+	m MyStr
+}
 
 func (m MyStr) Close() error {
 	return nil
@@ -105,4 +108,16 @@ func warning8() {
 	m, _ := NewCreator().OpenMyStruct() // want `\Qm.Close() should be deferred right after the resource creation`
 
 	print(m.String())
+}
+
+func warning9() {
+	var err error
+	cr := NewCreator()
+
+	cr.m, err = cr.OpenMyStruct() // want `\Qcr.m.Close() should be deferred right after the resource creation`
+	if err != nil {
+		return
+	}
+
+	println(cr.m.String())
 }
