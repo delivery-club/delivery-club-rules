@@ -82,10 +82,6 @@ func newEngine() error {
 	enabledTags := make(map[string]bool)
 	disabledTags := make(map[string]bool)
 
-	if flagDisable == "" {
-		disabledTags["experimental"] = true
-	}
-
 	for _, g := range strings.Split(flagDisable, ",") {
 		g = strings.TrimSpace(g)
 		if t := strings.Split(g, "#"); len(t) == 2 {
@@ -121,6 +117,10 @@ func newEngine() error {
 			}
 		}
 		return false
+	}
+
+	if !enabledTags["experimental"] {
+		disabledTags["experimental"] = true
 	}
 
 	if flagDebug != "" {
