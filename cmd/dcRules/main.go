@@ -123,6 +123,11 @@ func newEngine() error {
 		return false
 	}
 
+	if flagDebug != "" {
+		debugPrint(fmt.Sprintf("enabled tags: %+v", enabledTags))
+		debugPrint(fmt.Sprintf("disabled tags: %+v", disabledTags))
+	}
+
 	ctx := &ruleguard.LoadContext{
 		DebugImports: flagDebug != "",
 		Fset:         token.NewFileSet(),
