@@ -342,7 +342,7 @@ func regexpCompileInLoop(m dsl.Matcher) {
 //doc:after     s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unclosedResource(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
-		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
+		return x.Contains(`$_{$*_, $res, $*_}`) ||
 			x.Contains(`$_{$*_, $_: $res, $*_}`) || x.Contains(`$_ <- $res`) ||
 			x.Contains(`return $*_, $res, $*_`) || x.Contains(`$_[$_] = $res`) ||
 			x.Contains(`$_[$res] = $_`) || x.Contains(`$_ = $res;`) || x.Contains(`$_ := $res;`) ||
