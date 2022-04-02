@@ -44,11 +44,13 @@ func negative3() *os.File {
 	return file
 }
 
-func negative4() {
+//TODO: false positive `files` var escape the function
+func negative4() []*os.File {
 	var files []*os.File
-	file, _ := ioutil.TempFile("", "") // var escape the function in another var
+	file, _ := ioutil.TempFile("", "") // want `\Qfile.Close() should be deferred right after the resource creation`
 
 	files = append(files, file)
+	return files
 }
 
 func negative5() {

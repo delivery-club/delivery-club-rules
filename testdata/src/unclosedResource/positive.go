@@ -121,3 +121,10 @@ func warning9() {
 
 	println(cr.m.String())
 }
+
+func warning10() {
+	var files []*os.File
+	file, _ := ioutil.TempFile("", "") // want `\Qfile.Close() should be deferred right after the resource creation`
+
+	files = append(files, file)
+}

@@ -580,63 +580,49 @@ var PrecompiledRules = &ir.File{
 									{
 										Line: 361,
 										Op:   ir.FilterOrOp,
-										Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`) ||\n\n\tm[\"body\"].Contains(`var $_ = $res;`)",
+										Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`) ||\n\n\tm[\"body\"].Contains(`var $_ = $res;`)",
 										Args: []ir.FilterExpr{
 											{
 												Line: 361,
 												Op:   ir.FilterOrOp,
-												Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`)",
+												Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`)",
 												Args: []ir.FilterExpr{
 													{
 														Line: 361,
 														Op:   ir.FilterOrOp,
-														Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`)",
+														Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`)",
 														Args: []ir.FilterExpr{
 															{
 																Line: 361,
 																Op:   ir.FilterOrOp,
-																Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`)",
+																Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`)",
 																Args: []ir.FilterExpr{
 																	{
 																		Line: 361,
 																		Op:   ir.FilterOrOp,
-																		Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`)",
+																		Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`)",
 																		Args: []ir.FilterExpr{
 																			{
 																				Line: 361,
 																				Op:   ir.FilterOrOp,
-																				Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`)",
+																				Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`)",
 																				Args: []ir.FilterExpr{
 																					{
 																						Line: 361,
 																						Op:   ir.FilterOrOp,
-																						Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`)",
+																						Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`)",
 																						Args: []ir.FilterExpr{
 																							{
 																								Line: 361,
 																								Op:   ir.FilterOrOp,
-																								Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`)",
+																								Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`)",
 																								Args: []ir.FilterExpr{
 																									{
-																										Line: 361,
-																										Op:   ir.FilterOrOp,
-																										Src:  "m[\"body\"].Contains(`$_($*_, $res, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $res, $*_}`)",
-																										Args: []ir.FilterExpr{
-																											{
-																												Line:  361,
-																												Op:    ir.FilterVarContainsOp,
-																												Src:   "m[\"body\"].Contains(`$_($*_, $res, $*_)`)",
-																												Value: "body",
-																												Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_($*_, $res, $*_)"}},
-																											},
-																											{
-																												Line:  361,
-																												Op:    ir.FilterVarContainsOp,
-																												Src:   "m[\"body\"].Contains(`$_{$*_, $res, $*_}`)",
-																												Value: "body",
-																												Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_{$*_, $res, $*_}"}},
-																											},
-																										},
+																										Line:  361,
+																										Op:    ir.FilterVarContainsOp,
+																										Src:   "m[\"body\"].Contains(`$_{$*_, $res, $*_}`)",
+																										Value: "body",
+																										Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_{$*_, $res, $*_}"}},
 																									},
 																									{
 																										Line:  361,
