@@ -337,21 +337,21 @@ func regexpCompileInLoop(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased resources
-//doc:tags      diagnostic
+//doc:tags      experimental diagnostic
 //doc:before    s, _ := os.Open("foo.txt"); s.Read(body); return body
 //doc:after     s, _ := os.Open("foo.txt"); defer s.Close(); s.Read(body); return body
 func unclosedResource(m dsl.Matcher) {
 	varEscapeFunction := func(x dsl.Var) bool {
-		return x.Contains(`$_($*_, $res, $*_)`) || x.Contains(`$_{$*_, $res, $*_}`) ||
+		return x.Contains(`$_{$*_, $res, $*_}`) ||
 			x.Contains(`$_{$*_, $_: $res, $*_}`) || x.Contains(`$_ <- $res`) ||
 			x.Contains(`return $*_, $res, $*_`) || x.Contains(`$_[$_] = $res`) ||
 			x.Contains(`$_[$res] = $_`) || x.Contains(`$_ = $res;`) || x.Contains(`$_ := $res;`) ||
 			x.Contains(`var $_ = $res;`) || x.Contains(`var $_ $_ = $res;`)
 	}
 
-	m.Match(`$res, $err := $open($*_); $*body`,
-		`$res, $err = $open($*_); $*body`,
-		`var $res, $err = $open($*_); $*body`,
+	m.Match(`$res, $err := $_($*_); $*body`,
+		`$res, $err = $_($*_); $*body`,
+		`var $res, $err = $_($*_); $*body`,
 	).
 		Where(
 			m["res"].Type.Implements(`io.Closer`) &&
@@ -360,7 +360,7 @@ func unclosedResource(m dsl.Matcher) {
 				!m["body"].Contains(`$res.Close()`) &&
 				!varEscapeFunction(m["body"]),
 		).
-		Report(`$res.Close() should be deferred right after the $open error check`).
+		Report(`$res.Close() should be deferred right after the resource creation`).
 		At(m["res"])
 }
 
@@ -387,7 +387,7 @@ func unstoppedTimer(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased ticker
-//doc:tags      performance
+//doc:tags      performance diagnostic
 //doc:before    ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }
 //doc:after     ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }
 func unstoppedTicker(m dsl.Matcher) {
