@@ -471,3 +471,21 @@ func oneLineReturn(m dsl.Matcher) {
 		Where(!isPointer(m["x"])).
 		Suggest(`return $v`)
 }
+
+//doc:summary Detects Before/After call of time.Time that can be simplified.
+//doc:tags    style
+//doc:before  !t.Before(tt)
+//doc:after   t.After(tt)
+func simplifyTimeComparison(m dsl.Matcher) {
+	isTime := func(v dsl.Var) bool {
+		return v.Type.Is(`time.Time`) || v.Type.Is(`*time.Time`)
+	}
+
+	m.Match(`!$t.Before($tt)`).
+		Where(isTime(m["t"])).
+		Suggest("$t.After($tt)")
+
+	m.Match(`!$t.After($tt)`).
+		Where(isTime(m["t"])).
+		Suggest("$t.Before($tt)")
+}

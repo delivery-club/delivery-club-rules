@@ -102,21 +102,21 @@ func newEngine() error {
 			enabledGroups[g] = true
 		}
 	}
-	inDisabledByTags := func(g *ruleguard.GoRuleGroup) bool {
-		for _, t := range g.DocTags {
-			if disabledTags[t] {
-				return true
-			}
-		}
-		return false
-	}
-	inEnabledByTags := func(g *ruleguard.GoRuleGroup) bool {
+	inEnabledTags := func(g *ruleguard.GoRuleGroup) bool {
 		for _, t := range g.DocTags {
 			if enabledTags[t] {
 				return true
 			}
 		}
 		return false
+	}
+	inDisabledTags := func(g *ruleguard.GoRuleGroup) string {
+		for _, t := range g.DocTags {
+			if disabledTags[t] {
+				return t
+			}
+		}
+		return ""
 	}
 
 	if !enabledTags["experimental"] {
@@ -134,18 +134,19 @@ func newEngine() error {
 		DebugPrint:   debugPrint,
 		GroupFilter: func(g *ruleguard.GoRuleGroup) bool {
 			whyDisabled := ""
-			enabled := len(enabledGroups) == 0 || enabledGroups[g.Name]
+			enabled := flagEnable == "<all>" || enabledGroups[g.Name] || inEnabledTags(g)
 
 			switch {
 			case !enabled:
-				whyDisabled = "not enabled by -enabled flag"
+				whyDisabled = "not enabled by name or tag (-enable flag)"
 			case disabledGroups[g.Name]:
-				whyDisabled = "disabled by -disable flag"
-			case len(enabledTags) != 0 && !inEnabledByTags(g):
-				whyDisabled = "not enabled by tags in -enable flag"
-			case inDisabledByTags(g):
-				whyDisabled = "disabled by tags in -disable flag"
+				whyDisabled = "disabled by name (-disable flag)"
+			default:
+				if tag := inDisabledTags(g); tag != "" {
+					whyDisabled = fmt.Sprintf("disabled by %s tag (-disable flag)", tag)
+				}
 			}
+
 			if flagDebug != "" {
 				if whyDisabled != "" {
 					debugPrint(fmt.Sprintf("(-) %s is %s", g.Name, whyDisabled))
