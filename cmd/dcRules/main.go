@@ -119,6 +119,15 @@ func newEngine() error {
 		return ""
 	}
 
+	if !enabledTags["experimental"] {
+		disabledTags["experimental"] = true
+	}
+
+	if flagDebug != "" {
+		debugPrint(fmt.Sprintf("enabled tags: %+v", enabledTags))
+		debugPrint(fmt.Sprintf("disabled tags: %+v", disabledTags))
+	}
+
 	ctx := &ruleguard.LoadContext{
 		DebugImports: flagDebug != "",
 		Fset:         token.NewFileSet(),

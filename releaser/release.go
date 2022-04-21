@@ -67,11 +67,9 @@ func main() {
 func prepareArchive(checksums io.Writer, platform platformInfo, version string) error {
 	log.Printf("building %s", platform)
 
-	buildCmd := exec.Command("make", "build-release")
+	buildCmd := exec.Command("make", "build")
 	buildCmd.Env = append([]string{}, os.Environ()...) // Copy env slice
-	buildCmd.Env = append(buildCmd.Env, "GOOS="+platform.goos)
-	buildCmd.Env = append(buildCmd.Env, "GOARCH="+platform.goarch)
-	buildCmd.Env = append(buildCmd.Env, "CGO_ENABLED=0")
+	buildCmd.Env = append(buildCmd.Env, "GOOS="+platform.goos, "GOARCH="+platform.goarch, "CGO_ENABLED=0")
 	out, err := buildCmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("run %s: %v: %s", buildCmd, err, out)
