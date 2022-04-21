@@ -1515,6 +1515,71 @@ var PrecompiledRules = &ir.File{
 				},
 			}},
 		},
+		{
+			Line:        479,
+			Name:        "simplifyTimeComparison",
+			MatcherName: "m",
+			DocTags:     []string{"style"},
+			DocSummary:  "Detects Before/After call of time.Time that can be simplified.",
+			DocBefore:   "!t.Before(tt)",
+			DocAfter:    "t.After(tt)",
+			Rules: []ir.Rule{
+				{
+					Line:            484,
+					SyntaxPatterns:  []ir.PatternString{{Line: 484, Value: "!$t.Before($tt)"}},
+					ReportTemplate:  "suggestion: $t.After($tt)",
+					SuggestTemplate: "$t.After($tt)",
+					WhereExpr: ir.FilterExpr{
+						Line: 485,
+						Op:   ir.FilterOrOp,
+						Src:  "isTime(m[\"t\"])",
+						Args: []ir.FilterExpr{
+							{
+								Line:  485,
+								Op:    ir.FilterVarTypeIsOp,
+								Src:   "m[\"t\"].Type.Is(`time.Time`)",
+								Value: "t",
+								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
+							},
+							{
+								Line:  485,
+								Op:    ir.FilterVarTypeIsOp,
+								Src:   "m[\"t\"].Type.Is(`*time.Time`)",
+								Value: "t",
+								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
+							},
+						},
+					},
+				},
+				{
+					Line:            488,
+					SyntaxPatterns:  []ir.PatternString{{Line: 488, Value: "!$t.After($tt)"}},
+					ReportTemplate:  "suggestion: $t.Before($tt)",
+					SuggestTemplate: "$t.Before($tt)",
+					WhereExpr: ir.FilterExpr{
+						Line: 489,
+						Op:   ir.FilterOrOp,
+						Src:  "isTime(m[\"t\"])",
+						Args: []ir.FilterExpr{
+							{
+								Line:  489,
+								Op:    ir.FilterVarTypeIsOp,
+								Src:   "m[\"t\"].Type.Is(`time.Time`)",
+								Value: "t",
+								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
+							},
+							{
+								Line:  489,
+								Op:    ir.FilterVarTypeIsOp,
+								Src:   "m[\"t\"].Type.Is(`*time.Time`)",
+								Value: "t",
+								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 }
 
