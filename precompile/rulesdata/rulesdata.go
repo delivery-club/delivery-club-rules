@@ -210,7 +210,7 @@ var PrecompiledRules = &ir.File{
 				WhereExpr: ir.FilterExpr{
 					Line: 98,
 					Op:   ir.FilterAndOp,
-					Src:  "!m[\"x\"].Text.Matches(`^_$`) && (m[\"x\"].Text.Matches(`-`) || m[\"x\"].Text.Matches(`_`))",
+					Src:  "!m[\"x\"].Text.Matches(`^_$`) && (m[\"x\"].Text.Matches(`-|_`))",
 					Args: []ir.FilterExpr{
 						{
 							Line: 98,
@@ -225,25 +225,11 @@ var PrecompiledRules = &ir.File{
 							}},
 						},
 						{
-							Line: 98,
-							Op:   ir.FilterOrOp,
-							Src:  "(m[\"x\"].Text.Matches(`-`) || m[\"x\"].Text.Matches(`_`))",
-							Args: []ir.FilterExpr{
-								{
-									Line:  98,
-									Op:    ir.FilterVarTextMatchesOp,
-									Src:   "m[\"x\"].Text.Matches(`-`)",
-									Value: "x",
-									Args:  []ir.FilterExpr{{Line: 98, Op: ir.FilterStringOp, Src: "`-`", Value: "-"}},
-								},
-								{
-									Line:  98,
-									Op:    ir.FilterVarTextMatchesOp,
-									Src:   "m[\"x\"].Text.Matches(`_`)",
-									Value: "x",
-									Args:  []ir.FilterExpr{{Line: 98, Op: ir.FilterStringOp, Src: "`_`", Value: "_"}},
-								},
-							},
+							Line:  98,
+							Op:    ir.FilterVarTextMatchesOp,
+							Src:   "(m[\"x\"].Text.Matches(`-|_`))",
+							Value: "x",
+							Args:  []ir.FilterExpr{{Line: 98, Op: ir.FilterStringOp, Src: "`-|_`", Value: "-|_"}},
 						},
 					},
 				},
@@ -462,7 +448,7 @@ var PrecompiledRules = &ir.File{
 				WhereExpr: ir.FilterExpr{
 					Line: 327,
 					Op:   ir.FilterAndOp,
-					Src:  "m[\"s\"].Const && m[\"method\"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)",
+					Src:  "m[\"s\"].Const && !m[\"method\"].Contains(`QuoteMeta`)",
 					Args: []ir.FilterExpr{
 						{
 							Line:  327,
@@ -471,11 +457,16 @@ var PrecompiledRules = &ir.File{
 							Value: "s",
 						},
 						{
-							Line:  327,
-							Op:    ir.FilterVarTextMatchesOp,
-							Src:   "m[\"method\"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)",
-							Value: "method",
-							Args:  []ir.FilterExpr{{Line: 327, Op: ir.FilterStringOp, Src: "`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`", Value: "Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile"}},
+							Line: 327,
+							Op:   ir.FilterNotOp,
+							Src:  "!m[\"method\"].Contains(`QuoteMeta`)",
+							Args: []ir.FilterExpr{{
+								Line:  327,
+								Op:    ir.FilterVarContainsOp,
+								Src:   "m[\"method\"].Contains(`QuoteMeta`)",
+								Value: "method",
+								Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "QuoteMeta"}},
+							}},
 						},
 					},
 				},
