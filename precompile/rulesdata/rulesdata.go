@@ -450,39 +450,32 @@ var PrecompiledRules = &ir.File{
 					{Line: 314, Value: "for $_ := range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }"},
 					{Line: 315, Value: "for $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }"},
 					{Line: 316, Value: "for range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }"},
-					{Line: 318, Value: "for $*_; $*_; $*_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 319, Value: "for { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 320, Value: "for $_, $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 321, Value: "for $_, $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 322, Value: "for $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 323, Value: "for $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 324, Value: "for range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 326, Value: "for $*_; $*_; $*_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 327, Value: "for { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 328, Value: "for $_, $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 329, Value: "for $_, $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 330, Value: "for $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 331, Value: "for $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
-					{Line: 332, Value: "for range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 318, Value: "for $*_; $*_; $*_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 319, Value: "for { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 320, Value: "for $_, $_ := range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 321, Value: "for $_, $_ = range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 322, Value: "for $_ := range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 323, Value: "for $_ = range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
+					{Line: 324, Value: "for range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }"},
 				},
 				ReportTemplate: "don't compile regex in the loop, move it outside of the loop",
 				WhereExpr: ir.FilterExpr{
-					Line: 335,
+					Line: 327,
 					Op:   ir.FilterAndOp,
 					Src:  "m[\"s\"].Const && m[\"method\"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)",
 					Args: []ir.FilterExpr{
 						{
-							Line:  335,
+							Line:  327,
 							Op:    ir.FilterVarConstOp,
 							Src:   "m[\"s\"].Const",
 							Value: "s",
 						},
 						{
-							Line:  335,
+							Line:  327,
 							Op:    ir.FilterVarTextMatchesOp,
 							Src:   "m[\"method\"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)",
 							Value: "method",
-							Args:  []ir.FilterExpr{{Line: 335, Op: ir.FilterStringOp, Src: "`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`", Value: "Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile"}},
+							Args:  []ir.FilterExpr{{Line: 327, Op: ir.FilterStringOp, Src: "`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`", Value: "Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile"}},
 						},
 					},
 				},
@@ -490,7 +483,7 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        343,
+			Line:        335,
 			Name:        "unclosedResource",
 			MatcherName: "m",
 			DocTags:     []string{"experimental", "diagnostic"},
@@ -498,46 +491,46 @@ var PrecompiledRules = &ir.File{
 			DocBefore:   "s, _ := os.Open(\"foo.txt\"); s.Read(body); return body",
 			DocAfter:    "s, _ := os.Open(\"foo.txt\"); defer s.Close(); s.Read(body); return body",
 			Rules: []ir.Rule{{
-				Line: 352,
+				Line: 344,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 352, Value: "$res, $err := $_($*_); $*body"},
-					{Line: 353, Value: "$res, $err = $_($*_); $*body"},
-					{Line: 354, Value: "var $res, $err = $_($*_); $*body"},
+					{Line: 344, Value: "$res, $err := $_($*_); $*body"},
+					{Line: 345, Value: "$res, $err = $_($*_); $*body"},
+					{Line: 346, Value: "var $res, $err = $_($*_); $*body"},
 				},
 				ReportTemplate: "$res.Close() should be deferred right after the resource creation",
 				WhereExpr: ir.FilterExpr{
-					Line: 357,
+					Line: 349,
 					Op:   ir.FilterAndOp,
 					Src:  "m[\"res\"].Type.Implements(`io.Closer`) &&\n\t!m[\"res\"].Object.IsGlobal() &&\n\tm[\"err\"].Type.Implements(`error`) &&\n\t!m[\"body\"].Contains(`$res.Close()`) &&\n\t!varEscapeFunction(m[\"body\"])",
 					Args: []ir.FilterExpr{
 						{
-							Line: 357,
+							Line: 349,
 							Op:   ir.FilterAndOp,
 							Src:  "m[\"res\"].Type.Implements(`io.Closer`) &&\n\t!m[\"res\"].Object.IsGlobal() &&\n\tm[\"err\"].Type.Implements(`error`) &&\n\t!m[\"body\"].Contains(`$res.Close()`)",
 							Args: []ir.FilterExpr{
 								{
-									Line: 357,
+									Line: 349,
 									Op:   ir.FilterAndOp,
 									Src:  "m[\"res\"].Type.Implements(`io.Closer`) &&\n\t!m[\"res\"].Object.IsGlobal() &&\n\tm[\"err\"].Type.Implements(`error`)",
 									Args: []ir.FilterExpr{
 										{
-											Line: 357,
+											Line: 349,
 											Op:   ir.FilterAndOp,
 											Src:  "m[\"res\"].Type.Implements(`io.Closer`) &&\n\t!m[\"res\"].Object.IsGlobal()",
 											Args: []ir.FilterExpr{
 												{
-													Line:  357,
+													Line:  349,
 													Op:    ir.FilterVarTypeImplementsOp,
 													Src:   "m[\"res\"].Type.Implements(`io.Closer`)",
 													Value: "res",
-													Args:  []ir.FilterExpr{{Line: 357, Op: ir.FilterStringOp, Src: "`io.Closer`", Value: "io.Closer"}},
+													Args:  []ir.FilterExpr{{Line: 349, Op: ir.FilterStringOp, Src: "`io.Closer`", Value: "io.Closer"}},
 												},
 												{
-													Line: 358,
+													Line: 350,
 													Op:   ir.FilterNotOp,
 													Src:  "!m[\"res\"].Object.IsGlobal()",
 													Args: []ir.FilterExpr{{
-														Line:  358,
+														Line:  350,
 														Op:    ir.FilterVarObjectIsGlobalOp,
 														Src:   "m[\"res\"].Object.IsGlobal()",
 														Value: "res",
@@ -546,20 +539,20 @@ var PrecompiledRules = &ir.File{
 											},
 										},
 										{
-											Line:  359,
+											Line:  351,
 											Op:    ir.FilterVarTypeImplementsOp,
 											Src:   "m[\"err\"].Type.Implements(`error`)",
 											Value: "err",
-											Args:  []ir.FilterExpr{{Line: 359, Op: ir.FilterStringOp, Src: "`error`", Value: "error"}},
+											Args:  []ir.FilterExpr{{Line: 351, Op: ir.FilterStringOp, Src: "`error`", Value: "error"}},
 										},
 									},
 								},
 								{
-									Line: 360,
+									Line: 352,
 									Op:   ir.FilterNotOp,
 									Src:  "!m[\"body\"].Contains(`$res.Close()`)",
 									Args: []ir.FilterExpr{{
-										Line:  360,
+										Line:  352,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`$res.Close()`)",
 										Value: "body",
@@ -569,63 +562,63 @@ var PrecompiledRules = &ir.File{
 							},
 						},
 						{
-							Line: 361,
+							Line: 353,
 							Op:   ir.FilterNotOp,
 							Src:  "!varEscapeFunction(m[\"body\"])",
 							Args: []ir.FilterExpr{{
-								Line: 361,
+								Line: 353,
 								Op:   ir.FilterOrOp,
 								Src:  "varEscapeFunction(m[\"body\"])",
 								Args: []ir.FilterExpr{
 									{
-										Line: 361,
+										Line: 353,
 										Op:   ir.FilterOrOp,
 										Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`) ||\n\n\tm[\"body\"].Contains(`var $_ = $res;`)",
 										Args: []ir.FilterExpr{
 											{
-												Line: 361,
+												Line: 353,
 												Op:   ir.FilterOrOp,
 												Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`) ||\n\n\tm[\"body\"].Contains(`$_ := $res;`)",
 												Args: []ir.FilterExpr{
 													{
-														Line: 361,
+														Line: 353,
 														Op:   ir.FilterOrOp,
 														Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $res;`)",
 														Args: []ir.FilterExpr{
 															{
-																Line: 361,
+																Line: 353,
 																Op:   ir.FilterOrOp,
 																Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`) ||\n\n\tm[\"body\"].Contains(`$_[$res] = $_`)",
 																Args: []ir.FilterExpr{
 																	{
-																		Line: 361,
+																		Line: 353,
 																		Op:   ir.FilterOrOp,
 																		Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $res`)",
 																		Args: []ir.FilterExpr{
 																			{
-																				Line: 361,
+																				Line: 353,
 																				Op:   ir.FilterOrOp,
 																				Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`) ||\n\n\tm[\"body\"].Contains(`return $*_, $res, $*_`)",
 																				Args: []ir.FilterExpr{
 																					{
-																						Line: 361,
+																						Line: 353,
 																						Op:   ir.FilterOrOp,
 																						Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $res`)",
 																						Args: []ir.FilterExpr{
 																							{
-																								Line: 361,
+																								Line: 353,
 																								Op:   ir.FilterOrOp,
 																								Src:  "m[\"body\"].Contains(`$_{$*_, $res, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`)",
 																								Args: []ir.FilterExpr{
 																									{
-																										Line:  361,
+																										Line:  353,
 																										Op:    ir.FilterVarContainsOp,
 																										Src:   "m[\"body\"].Contains(`$_{$*_, $res, $*_}`)",
 																										Value: "body",
 																										Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_{$*_, $res, $*_}"}},
 																									},
 																									{
-																										Line:  361,
+																										Line:  353,
 																										Op:    ir.FilterVarContainsOp,
 																										Src:   "m[\"body\"].Contains(`$_{$*_, $_: $res, $*_}`)",
 																										Value: "body",
@@ -634,7 +627,7 @@ var PrecompiledRules = &ir.File{
 																								},
 																							},
 																							{
-																								Line:  361,
+																								Line:  353,
 																								Op:    ir.FilterVarContainsOp,
 																								Src:   "m[\"body\"].Contains(`$_ <- $res`)",
 																								Value: "body",
@@ -643,7 +636,7 @@ var PrecompiledRules = &ir.File{
 																						},
 																					},
 																					{
-																						Line:  361,
+																						Line:  353,
 																						Op:    ir.FilterVarContainsOp,
 																						Src:   "m[\"body\"].Contains(`return $*_, $res, $*_`)",
 																						Value: "body",
@@ -652,7 +645,7 @@ var PrecompiledRules = &ir.File{
 																				},
 																			},
 																			{
-																				Line:  361,
+																				Line:  353,
 																				Op:    ir.FilterVarContainsOp,
 																				Src:   "m[\"body\"].Contains(`$_[$_] = $res`)",
 																				Value: "body",
@@ -661,7 +654,7 @@ var PrecompiledRules = &ir.File{
 																		},
 																	},
 																	{
-																		Line:  361,
+																		Line:  353,
 																		Op:    ir.FilterVarContainsOp,
 																		Src:   "m[\"body\"].Contains(`$_[$res] = $_`)",
 																		Value: "body",
@@ -670,7 +663,7 @@ var PrecompiledRules = &ir.File{
 																},
 															},
 															{
-																Line:  361,
+																Line:  353,
 																Op:    ir.FilterVarContainsOp,
 																Src:   "m[\"body\"].Contains(`$_ = $res;`)",
 																Value: "body",
@@ -679,7 +672,7 @@ var PrecompiledRules = &ir.File{
 														},
 													},
 													{
-														Line:  361,
+														Line:  353,
 														Op:    ir.FilterVarContainsOp,
 														Src:   "m[\"body\"].Contains(`$_ := $res;`)",
 														Value: "body",
@@ -688,7 +681,7 @@ var PrecompiledRules = &ir.File{
 												},
 											},
 											{
-												Line:  361,
+												Line:  353,
 												Op:    ir.FilterVarContainsOp,
 												Src:   "m[\"body\"].Contains(`var $_ = $res;`)",
 												Value: "body",
@@ -697,7 +690,7 @@ var PrecompiledRules = &ir.File{
 										},
 									},
 									{
-										Line:  361,
+										Line:  353,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`var $_ $_ = $res;`)",
 										Value: "body",
@@ -712,7 +705,7 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        371,
+			Line:        363,
 			Name:        "unstoppedTimer",
 			MatcherName: "m",
 			DocTags:     []string{"performance"},
@@ -720,41 +713,41 @@ var PrecompiledRules = &ir.File{
 			DocBefore:   "timer := time.NewTimer(time.Second); select { case <-timer.C: return nil; default: return nil }",
 			DocAfter:    "timer := time.NewTimer(time.Second); defer timer.Stop(); select { case <-timer.C: return nil; default: return nil }",
 			Rules: []ir.Rule{{
-				Line: 380,
+				Line: 372,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 380, Value: "$x := time.NewTimer($_); $*body"},
-					{Line: 381, Value: "$x = time.NewTimer($_); $*body"},
-					{Line: 382, Value: "var $x = time.NewTimer($_); $*body"},
-					{Line: 383, Value: "var $x $_ = time.NewTimer($_); $*body"},
+					{Line: 372, Value: "$x := time.NewTimer($_); $*body"},
+					{Line: 373, Value: "$x = time.NewTimer($_); $*body"},
+					{Line: 374, Value: "var $x = time.NewTimer($_); $*body"},
+					{Line: 375, Value: "var $x $_ = time.NewTimer($_); $*body"},
 				},
 				ReportTemplate: "unstopped timer",
 				WhereExpr: ir.FilterExpr{
-					Line: 384,
+					Line: 376,
 					Op:   ir.FilterAndOp,
 					Src:  "!m[\"x\"].Object.IsGlobal() && !m[\"body\"].Contains(`$x.Stop()`) && !varEscapeFunction(m[\"body\"])",
 					Args: []ir.FilterExpr{
 						{
-							Line: 384,
+							Line: 376,
 							Op:   ir.FilterAndOp,
 							Src:  "!m[\"x\"].Object.IsGlobal() && !m[\"body\"].Contains(`$x.Stop()`)",
 							Args: []ir.FilterExpr{
 								{
-									Line: 384,
+									Line: 376,
 									Op:   ir.FilterNotOp,
 									Src:  "!m[\"x\"].Object.IsGlobal()",
 									Args: []ir.FilterExpr{{
-										Line:  384,
+										Line:  376,
 										Op:    ir.FilterVarObjectIsGlobalOp,
 										Src:   "m[\"x\"].Object.IsGlobal()",
 										Value: "x",
 									}},
 								},
 								{
-									Line: 384,
+									Line: 376,
 									Op:   ir.FilterNotOp,
 									Src:  "!m[\"body\"].Contains(`$x.Stop()`)",
 									Args: []ir.FilterExpr{{
-										Line:  384,
+										Line:  376,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`$x.Stop()`)",
 										Value: "body",
@@ -764,68 +757,68 @@ var PrecompiledRules = &ir.File{
 							},
 						},
 						{
-							Line: 384,
+							Line: 376,
 							Op:   ir.FilterNotOp,
 							Src:  "!varEscapeFunction(m[\"body\"])",
 							Args: []ir.FilterExpr{{
-								Line: 384,
+								Line: 376,
 								Op:   ir.FilterOrOp,
 								Src:  "varEscapeFunction(m[\"body\"])",
 								Args: []ir.FilterExpr{
 									{
-										Line: 384,
+										Line: 376,
 										Op:   ir.FilterOrOp,
 										Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`) ||\n\n\tm[\"body\"].Contains(`$_ := $x;`) ||\n\n\tm[\"body\"].Contains(`var $_ = $x;`)",
 										Args: []ir.FilterExpr{
 											{
-												Line: 384,
+												Line: 376,
 												Op:   ir.FilterOrOp,
 												Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`) ||\n\n\tm[\"body\"].Contains(`$_ := $x;`)",
 												Args: []ir.FilterExpr{
 													{
-														Line: 384,
+														Line: 376,
 														Op:   ir.FilterOrOp,
 														Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`)",
 														Args: []ir.FilterExpr{
 															{
-																Line: 384,
+																Line: 376,
 																Op:   ir.FilterOrOp,
 																Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`)",
 																Args: []ir.FilterExpr{
 																	{
-																		Line: 384,
+																		Line: 376,
 																		Op:   ir.FilterOrOp,
 																		Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`)",
 																		Args: []ir.FilterExpr{
 																			{
-																				Line: 384,
+																				Line: 376,
 																				Op:   ir.FilterOrOp,
 																				Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`)",
 																				Args: []ir.FilterExpr{
 																					{
-																						Line: 384,
+																						Line: 376,
 																						Op:   ir.FilterOrOp,
 																						Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`)",
 																						Args: []ir.FilterExpr{
 																							{
-																								Line: 384,
+																								Line: 376,
 																								Op:   ir.FilterOrOp,
 																								Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`)",
 																								Args: []ir.FilterExpr{
 																									{
-																										Line: 384,
+																										Line: 376,
 																										Op:   ir.FilterOrOp,
 																										Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`)",
 																										Args: []ir.FilterExpr{
 																											{
-																												Line:  384,
+																												Line:  376,
 																												Op:    ir.FilterVarContainsOp,
 																												Src:   "m[\"body\"].Contains(`$_($*_, $x, $*_)`)",
 																												Value: "body",
 																												Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_($*_, $x, $*_)"}},
 																											},
 																											{
-																												Line:  384,
+																												Line:  376,
 																												Op:    ir.FilterVarContainsOp,
 																												Src:   "m[\"body\"].Contains(`$_{$*_, $x, $*_}`)",
 																												Value: "body",
@@ -834,7 +827,7 @@ var PrecompiledRules = &ir.File{
 																										},
 																									},
 																									{
-																										Line:  384,
+																										Line:  376,
 																										Op:    ir.FilterVarContainsOp,
 																										Src:   "m[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`)",
 																										Value: "body",
@@ -843,7 +836,7 @@ var PrecompiledRules = &ir.File{
 																								},
 																							},
 																							{
-																								Line:  384,
+																								Line:  376,
 																								Op:    ir.FilterVarContainsOp,
 																								Src:   "m[\"body\"].Contains(`$_ <- $x`)",
 																								Value: "body",
@@ -852,7 +845,7 @@ var PrecompiledRules = &ir.File{
 																						},
 																					},
 																					{
-																						Line:  384,
+																						Line:  376,
 																						Op:    ir.FilterVarContainsOp,
 																						Src:   "m[\"body\"].Contains(`return $*_, $x, $*_`)",
 																						Value: "body",
@@ -861,7 +854,7 @@ var PrecompiledRules = &ir.File{
 																				},
 																			},
 																			{
-																				Line:  384,
+																				Line:  376,
 																				Op:    ir.FilterVarContainsOp,
 																				Src:   "m[\"body\"].Contains(`$_[$_] = $x`)",
 																				Value: "body",
@@ -870,7 +863,7 @@ var PrecompiledRules = &ir.File{
 																		},
 																	},
 																	{
-																		Line:  384,
+																		Line:  376,
 																		Op:    ir.FilterVarContainsOp,
 																		Src:   "m[\"body\"].Contains(`$_[$x] = $_`)",
 																		Value: "body",
@@ -879,7 +872,7 @@ var PrecompiledRules = &ir.File{
 																},
 															},
 															{
-																Line:  384,
+																Line:  376,
 																Op:    ir.FilterVarContainsOp,
 																Src:   "m[\"body\"].Contains(`$_ = $x;`)",
 																Value: "body",
@@ -888,7 +881,7 @@ var PrecompiledRules = &ir.File{
 														},
 													},
 													{
-														Line:  384,
+														Line:  376,
 														Op:    ir.FilterVarContainsOp,
 														Src:   "m[\"body\"].Contains(`$_ := $x;`)",
 														Value: "body",
@@ -897,7 +890,7 @@ var PrecompiledRules = &ir.File{
 												},
 											},
 											{
-												Line:  384,
+												Line:  376,
 												Op:    ir.FilterVarContainsOp,
 												Src:   "m[\"body\"].Contains(`var $_ = $x;`)",
 												Value: "body",
@@ -906,7 +899,7 @@ var PrecompiledRules = &ir.File{
 										},
 									},
 									{
-										Line:  384,
+										Line:  376,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`var $_ $_ = $x;`)",
 										Value: "body",
@@ -921,7 +914,7 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        393,
+			Line:        385,
 			Name:        "unstoppedTicker",
 			MatcherName: "m",
 			DocTags:     []string{"performance", "diagnostic"},
@@ -929,41 +922,41 @@ var PrecompiledRules = &ir.File{
 			DocBefore:   "ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }",
 			DocAfter:    "ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }",
 			Rules: []ir.Rule{{
-				Line: 402,
+				Line: 394,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 402, Value: "$x := time.NewTicker($_); $*body"},
-					{Line: 403, Value: "$x = time.NewTicker($_); $*body"},
-					{Line: 404, Value: "var $x = time.NewTicker($_); $*body"},
-					{Line: 405, Value: "var $x $_ = time.NewTicker($_); $*body"},
+					{Line: 394, Value: "$x := time.NewTicker($_); $*body"},
+					{Line: 395, Value: "$x = time.NewTicker($_); $*body"},
+					{Line: 396, Value: "var $x = time.NewTicker($_); $*body"},
+					{Line: 397, Value: "var $x $_ = time.NewTicker($_); $*body"},
 				},
 				ReportTemplate: "unstopped ticker",
 				WhereExpr: ir.FilterExpr{
-					Line: 406,
+					Line: 398,
 					Op:   ir.FilterAndOp,
 					Src:  "!m[\"x\"].Object.IsGlobal() && !m[\"body\"].Contains(`$x.Stop()`) && !varEscapeFunction(m[\"body\"])",
 					Args: []ir.FilterExpr{
 						{
-							Line: 406,
+							Line: 398,
 							Op:   ir.FilterAndOp,
 							Src:  "!m[\"x\"].Object.IsGlobal() && !m[\"body\"].Contains(`$x.Stop()`)",
 							Args: []ir.FilterExpr{
 								{
-									Line: 406,
+									Line: 398,
 									Op:   ir.FilterNotOp,
 									Src:  "!m[\"x\"].Object.IsGlobal()",
 									Args: []ir.FilterExpr{{
-										Line:  406,
+										Line:  398,
 										Op:    ir.FilterVarObjectIsGlobalOp,
 										Src:   "m[\"x\"].Object.IsGlobal()",
 										Value: "x",
 									}},
 								},
 								{
-									Line: 406,
+									Line: 398,
 									Op:   ir.FilterNotOp,
 									Src:  "!m[\"body\"].Contains(`$x.Stop()`)",
 									Args: []ir.FilterExpr{{
-										Line:  406,
+										Line:  398,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`$x.Stop()`)",
 										Value: "body",
@@ -973,68 +966,68 @@ var PrecompiledRules = &ir.File{
 							},
 						},
 						{
-							Line: 406,
+							Line: 398,
 							Op:   ir.FilterNotOp,
 							Src:  "!varEscapeFunction(m[\"body\"])",
 							Args: []ir.FilterExpr{{
-								Line: 406,
+								Line: 398,
 								Op:   ir.FilterOrOp,
 								Src:  "varEscapeFunction(m[\"body\"])",
 								Args: []ir.FilterExpr{
 									{
-										Line: 406,
+										Line: 398,
 										Op:   ir.FilterOrOp,
 										Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`) ||\n\n\tm[\"body\"].Contains(`$_ := $x;`) ||\n\n\tm[\"body\"].Contains(`var $_ = $x;`)",
 										Args: []ir.FilterExpr{
 											{
-												Line: 406,
+												Line: 398,
 												Op:   ir.FilterOrOp,
 												Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`) ||\n\n\tm[\"body\"].Contains(`$_ := $x;`)",
 												Args: []ir.FilterExpr{
 													{
-														Line: 406,
+														Line: 398,
 														Op:   ir.FilterOrOp,
 														Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`) ||\n\n\tm[\"body\"].Contains(`$_ = $x;`)",
 														Args: []ir.FilterExpr{
 															{
-																Line: 406,
+																Line: 398,
 																Op:   ir.FilterOrOp,
 																Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`) ||\n\n\tm[\"body\"].Contains(`$_[$x] = $_`)",
 																Args: []ir.FilterExpr{
 																	{
-																		Line: 406,
+																		Line: 398,
 																		Op:   ir.FilterOrOp,
 																		Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`) ||\n\n\tm[\"body\"].Contains(`$_[$_] = $x`)",
 																		Args: []ir.FilterExpr{
 																			{
-																				Line: 406,
+																				Line: 398,
 																				Op:   ir.FilterOrOp,
 																				Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`) ||\n\n\tm[\"body\"].Contains(`return $*_, $x, $*_`)",
 																				Args: []ir.FilterExpr{
 																					{
-																						Line: 406,
+																						Line: 398,
 																						Op:   ir.FilterOrOp,
 																						Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_ <- $x`)",
 																						Args: []ir.FilterExpr{
 																							{
-																								Line: 406,
+																								Line: 398,
 																								Op:   ir.FilterOrOp,
 																								Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`)",
 																								Args: []ir.FilterExpr{
 																									{
-																										Line: 406,
+																										Line: 398,
 																										Op:   ir.FilterOrOp,
 																										Src:  "m[\"body\"].Contains(`$_($*_, $x, $*_)`) ||\n\n\tm[\"body\"].Contains(`$_{$*_, $x, $*_}`)",
 																										Args: []ir.FilterExpr{
 																											{
-																												Line:  406,
+																												Line:  398,
 																												Op:    ir.FilterVarContainsOp,
 																												Src:   "m[\"body\"].Contains(`$_($*_, $x, $*_)`)",
 																												Value: "body",
 																												Args:  []ir.FilterExpr{{Line: 0, Op: ir.FilterStringOp, Src: "", Value: "$_($*_, $x, $*_)"}},
 																											},
 																											{
-																												Line:  406,
+																												Line:  398,
 																												Op:    ir.FilterVarContainsOp,
 																												Src:   "m[\"body\"].Contains(`$_{$*_, $x, $*_}`)",
 																												Value: "body",
@@ -1043,7 +1036,7 @@ var PrecompiledRules = &ir.File{
 																										},
 																									},
 																									{
-																										Line:  406,
+																										Line:  398,
 																										Op:    ir.FilterVarContainsOp,
 																										Src:   "m[\"body\"].Contains(`$_{$*_, $_: $x, $*_}`)",
 																										Value: "body",
@@ -1052,7 +1045,7 @@ var PrecompiledRules = &ir.File{
 																								},
 																							},
 																							{
-																								Line:  406,
+																								Line:  398,
 																								Op:    ir.FilterVarContainsOp,
 																								Src:   "m[\"body\"].Contains(`$_ <- $x`)",
 																								Value: "body",
@@ -1061,7 +1054,7 @@ var PrecompiledRules = &ir.File{
 																						},
 																					},
 																					{
-																						Line:  406,
+																						Line:  398,
 																						Op:    ir.FilterVarContainsOp,
 																						Src:   "m[\"body\"].Contains(`return $*_, $x, $*_`)",
 																						Value: "body",
@@ -1070,7 +1063,7 @@ var PrecompiledRules = &ir.File{
 																				},
 																			},
 																			{
-																				Line:  406,
+																				Line:  398,
 																				Op:    ir.FilterVarContainsOp,
 																				Src:   "m[\"body\"].Contains(`$_[$_] = $x`)",
 																				Value: "body",
@@ -1079,7 +1072,7 @@ var PrecompiledRules = &ir.File{
 																		},
 																	},
 																	{
-																		Line:  406,
+																		Line:  398,
 																		Op:    ir.FilterVarContainsOp,
 																		Src:   "m[\"body\"].Contains(`$_[$x] = $_`)",
 																		Value: "body",
@@ -1088,7 +1081,7 @@ var PrecompiledRules = &ir.File{
 																},
 															},
 															{
-																Line:  406,
+																Line:  398,
 																Op:    ir.FilterVarContainsOp,
 																Src:   "m[\"body\"].Contains(`$_ = $x;`)",
 																Value: "body",
@@ -1097,7 +1090,7 @@ var PrecompiledRules = &ir.File{
 														},
 													},
 													{
-														Line:  406,
+														Line:  398,
 														Op:    ir.FilterVarContainsOp,
 														Src:   "m[\"body\"].Contains(`$_ := $x;`)",
 														Value: "body",
@@ -1106,7 +1099,7 @@ var PrecompiledRules = &ir.File{
 												},
 											},
 											{
-												Line:  406,
+												Line:  398,
 												Op:    ir.FilterVarContainsOp,
 												Src:   "m[\"body\"].Contains(`var $_ = $x;`)",
 												Value: "body",
@@ -1115,7 +1108,7 @@ var PrecompiledRules = &ir.File{
 										},
 									},
 									{
-										Line:  406,
+										Line:  398,
 										Op:    ir.FilterVarContainsOp,
 										Src:   "m[\"body\"].Contains(`var $_ $_ = $x;`)",
 										Value: "body",
@@ -1130,7 +1123,7 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        415,
+			Line:        407,
 			Name:        "simplifyErrorCheck",
 			MatcherName: "m",
 			DocTags:     []string{"style"},
@@ -1139,124 +1132,124 @@ var PrecompiledRules = &ir.File{
 			DocAfter:    "if err := myFunc(); err != nil { println(err) }",
 			Rules: []ir.Rule{
 				{
-					Line:            416,
-					SyntaxPatterns:  []ir.PatternString{{Line: 416, Value: "$err := $f($*args); if $err != nil { $*body }"}},
+					Line:            408,
+					SyntaxPatterns:  []ir.PatternString{{Line: 408, Value: "$err := $f($*args); if $err != nil { $*body }"}},
 					ReportTemplate:  "error check can be simplified in one line",
 					SuggestTemplate: "if $err := $f($args); $err != nil { $body }",
 					WhereExpr: ir.FilterExpr{
-						Line: 417,
+						Line: 409,
 						Op:   ir.FilterAndOp,
 						Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\") && m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 						Args: []ir.FilterExpr{
 							{
-								Line: 417,
+								Line: 409,
 								Op:   ir.FilterAndOp,
 								Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Args: []ir.FilterExpr{
 									{
-										Line:  417,
+										Line:  409,
 										Op:    ir.FilterVarTypeImplementsOp,
 										Src:   "m[\"err\"].Type.Implements(\"error\")",
 										Value: "err",
-										Args:  []ir.FilterExpr{{Line: 417, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
+										Args:  []ir.FilterExpr{{Line: 409, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
 									},
 									{
-										Line:  418,
+										Line:  410,
 										Op:    ir.FilterVarTextMatchesOp,
 										Src:   "m[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 										Value: "f",
-										Args:  []ir.FilterExpr{{Line: 418, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+										Args:  []ir.FilterExpr{{Line: 410, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 									},
 								},
 							},
 							{
-								Line:  418,
+								Line:  410,
 								Op:    ir.FilterVarTextMatchesOp,
 								Src:   "m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Value: "args",
-								Args:  []ir.FilterExpr{{Line: 418, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+								Args:  []ir.FilterExpr{{Line: 410, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 							},
 						},
 					},
 				},
 				{
-					Line:            422,
-					SyntaxPatterns:  []ir.PatternString{{Line: 422, Value: "$err = $f($*args); if $err != nil { $*body }"}},
+					Line:            414,
+					SyntaxPatterns:  []ir.PatternString{{Line: 414, Value: "$err = $f($*args); if $err != nil { $*body }"}},
 					ReportTemplate:  "error check can be simplified in one line",
 					SuggestTemplate: "if $err = $f($args); $err != nil { $body }",
 					WhereExpr: ir.FilterExpr{
-						Line: 423,
+						Line: 415,
 						Op:   ir.FilterAndOp,
 						Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\") && m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 						Args: []ir.FilterExpr{
 							{
-								Line: 423,
+								Line: 415,
 								Op:   ir.FilterAndOp,
 								Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Args: []ir.FilterExpr{
 									{
-										Line:  423,
+										Line:  415,
 										Op:    ir.FilterVarTypeImplementsOp,
 										Src:   "m[\"err\"].Type.Implements(\"error\")",
 										Value: "err",
-										Args:  []ir.FilterExpr{{Line: 423, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
+										Args:  []ir.FilterExpr{{Line: 415, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
 									},
 									{
-										Line:  424,
+										Line:  416,
 										Op:    ir.FilterVarTextMatchesOp,
 										Src:   "m[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 										Value: "f",
-										Args:  []ir.FilterExpr{{Line: 424, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+										Args:  []ir.FilterExpr{{Line: 416, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 									},
 								},
 							},
 							{
-								Line:  424,
+								Line:  416,
 								Op:    ir.FilterVarTextMatchesOp,
 								Src:   "m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Value: "args",
-								Args:  []ir.FilterExpr{{Line: 424, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+								Args:  []ir.FilterExpr{{Line: 416, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 							},
 						},
 					},
 				},
 				{
-					Line:            428,
-					SyntaxPatterns:  []ir.PatternString{{Line: 428, Value: "var $err = $f($*args); if $err != nil { $*body }"}},
+					Line:            420,
+					SyntaxPatterns:  []ir.PatternString{{Line: 420, Value: "var $err = $f($*args); if $err != nil { $*body }"}},
 					ReportTemplate:  "error check can be simplified in one line",
 					SuggestTemplate: "if $err := $f($args); $err != nil { $body }",
 					WhereExpr: ir.FilterExpr{
-						Line: 429,
+						Line: 421,
 						Op:   ir.FilterAndOp,
 						Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\") && m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 						Args: []ir.FilterExpr{
 							{
-								Line: 429,
+								Line: 421,
 								Op:   ir.FilterAndOp,
 								Src:  "m[\"err\"].Type.Implements(\"error\") &&\n\tm[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Args: []ir.FilterExpr{
 									{
-										Line:  429,
+										Line:  421,
 										Op:    ir.FilterVarTypeImplementsOp,
 										Src:   "m[\"err\"].Type.Implements(\"error\")",
 										Value: "err",
-										Args:  []ir.FilterExpr{{Line: 429, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
+										Args:  []ir.FilterExpr{{Line: 421, Op: ir.FilterStringOp, Src: "\"error\"", Value: "error"}},
 									},
 									{
-										Line:  430,
+										Line:  422,
 										Op:    ir.FilterVarTextMatchesOp,
 										Src:   "m[\"f\"].Text.Matches(\"(?s)^.{0,40}$\")",
 										Value: "f",
-										Args:  []ir.FilterExpr{{Line: 430, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+										Args:  []ir.FilterExpr{{Line: 422, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 									},
 								},
 							},
 							{
-								Line:  430,
+								Line:  422,
 								Op:    ir.FilterVarTextMatchesOp,
 								Src:   "m[\"args\"].Text.Matches(\"(?s)^.{0,40}$\")",
 								Value: "args",
-								Args:  []ir.FilterExpr{{Line: 430, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
+								Args:  []ir.FilterExpr{{Line: 422, Op: ir.FilterStringOp, Src: "\"(?s)^.{0,40}$\"", Value: "(?s)^.{0,40}$"}},
 							},
 						},
 					},
@@ -1264,105 +1257,105 @@ var PrecompiledRules = &ir.File{
 			},
 		},
 		{
-			Line:        437,
+			Line:        429,
 			Name:        "syncPoolNonPtr",
 			MatcherName: "m",
 			DocTags:     []string{"performance"},
 			DocSummary:  "Non-pointer values in sync.Pool involve extra allocation",
 			Rules: []ir.Rule{{
-				Line:           444,
-				SyntaxPatterns: []ir.PatternString{{Line: 444, Value: "$x.Put($y)"}},
+				Line:           436,
+				SyntaxPatterns: []ir.PatternString{{Line: 436, Value: "$x.Put($y)"}},
 				ReportTemplate: "non-pointer values in sync.Pool involve extra allocation",
 				WhereExpr: ir.FilterExpr{
-					Line: 445,
+					Line: 437,
 					Op:   ir.FilterAndOp,
 					Src:  "m[\"x\"].Type.Is(\"sync.Pool\") && !isPointer(m[\"y\"])",
 					Args: []ir.FilterExpr{
 						{
-							Line:  445,
+							Line:  437,
 							Op:    ir.FilterVarTypeIsOp,
 							Src:   "m[\"x\"].Type.Is(\"sync.Pool\")",
 							Value: "x",
-							Args:  []ir.FilterExpr{{Line: 445, Op: ir.FilterStringOp, Src: "\"sync.Pool\"", Value: "sync.Pool"}},
+							Args:  []ir.FilterExpr{{Line: 437, Op: ir.FilterStringOp, Src: "\"sync.Pool\"", Value: "sync.Pool"}},
 						},
 						{
-							Line: 445,
+							Line: 437,
 							Op:   ir.FilterNotOp,
 							Src:  "!isPointer(m[\"y\"])",
 							Args: []ir.FilterExpr{{
-								Line: 445,
+								Line: 437,
 								Op:   ir.FilterOrOp,
 								Src:  "isPointer(m[\"y\"])",
 								Args: []ir.FilterExpr{
 									{
-										Line: 445,
+										Line: 437,
 										Op:   ir.FilterOrOp,
 										Src:  "m[\"y\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"interface{$*_}\") ||\n\n\tm[\"y\"].Type.Underlying().Is(`func($*_) $*_`)",
 										Args: []ir.FilterExpr{
 											{
-												Line: 445,
+												Line: 437,
 												Op:   ir.FilterOrOp,
 												Src:  "m[\"y\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"interface{$*_}\")",
 												Args: []ir.FilterExpr{
 													{
-														Line: 445,
+														Line: 437,
 														Op:   ir.FilterOrOp,
 														Src:  "m[\"y\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"map[$_]$_\")",
 														Args: []ir.FilterExpr{
 															{
-																Line: 445,
+																Line: 437,
 																Op:   ir.FilterOrOp,
 																Src:  "m[\"y\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"y\"].Type.Underlying().Is(\"chan $_\")",
 																Args: []ir.FilterExpr{
 																	{
-																		Line:  445,
+																		Line:  437,
 																		Op:    ir.FilterVarTypeUnderlyingIsOp,
 																		Src:   "m[\"y\"].Type.Underlying().Is(\"*$_\")",
 																		Value: "y",
-																		Args:  []ir.FilterExpr{{Line: 439, Op: ir.FilterStringOp, Src: "\"*$_\"", Value: "*$_"}},
+																		Args:  []ir.FilterExpr{{Line: 431, Op: ir.FilterStringOp, Src: "\"*$_\"", Value: "*$_"}},
 																	},
 																	{
-																		Line:  445,
+																		Line:  437,
 																		Op:    ir.FilterVarTypeUnderlyingIsOp,
 																		Src:   "m[\"y\"].Type.Underlying().Is(\"chan $_\")",
 																		Value: "y",
-																		Args:  []ir.FilterExpr{{Line: 439, Op: ir.FilterStringOp, Src: "\"chan $_\"", Value: "chan $_"}},
+																		Args:  []ir.FilterExpr{{Line: 431, Op: ir.FilterStringOp, Src: "\"chan $_\"", Value: "chan $_"}},
 																	},
 																},
 															},
 															{
-																Line:  445,
+																Line:  437,
 																Op:    ir.FilterVarTypeUnderlyingIsOp,
 																Src:   "m[\"y\"].Type.Underlying().Is(\"map[$_]$_\")",
 																Value: "y",
-																Args:  []ir.FilterExpr{{Line: 440, Op: ir.FilterStringOp, Src: "\"map[$_]$_\"", Value: "map[$_]$_"}},
+																Args:  []ir.FilterExpr{{Line: 432, Op: ir.FilterStringOp, Src: "\"map[$_]$_\"", Value: "map[$_]$_"}},
 															},
 														},
 													},
 													{
-														Line:  445,
+														Line:  437,
 														Op:    ir.FilterVarTypeUnderlyingIsOp,
 														Src:   "m[\"y\"].Type.Underlying().Is(\"interface{$*_}\")",
 														Value: "y",
-														Args:  []ir.FilterExpr{{Line: 440, Op: ir.FilterStringOp, Src: "\"interface{$*_}\"", Value: "interface{$*_}"}},
+														Args:  []ir.FilterExpr{{Line: 432, Op: ir.FilterStringOp, Src: "\"interface{$*_}\"", Value: "interface{$*_}"}},
 													},
 												},
 											},
 											{
-												Line:  445,
+												Line:  437,
 												Op:    ir.FilterVarTypeUnderlyingIsOp,
 												Src:   "m[\"y\"].Type.Underlying().Is(`func($*_) $*_`)",
 												Value: "y",
-												Args:  []ir.FilterExpr{{Line: 441, Op: ir.FilterStringOp, Src: "`func($*_) $*_`", Value: "func($*_) $*_"}},
+												Args:  []ir.FilterExpr{{Line: 433, Op: ir.FilterStringOp, Src: "`func($*_) $*_`", Value: "func($*_) $*_"}},
 											},
 										},
 									},
 									{
-										Line:  445,
+										Line:  437,
 										Op:    ir.FilterVarTypeUnderlyingIsOp,
 										Src:   "m[\"y\"].Type.Underlying().Is(`unsafe.Pointer`)",
 										Value: "y",
-										Args:  []ir.FilterExpr{{Line: 441, Op: ir.FilterStringOp, Src: "`unsafe.Pointer`", Value: "unsafe.Pointer"}},
+										Args:  []ir.FilterExpr{{Line: 433, Op: ir.FilterStringOp, Src: "`unsafe.Pointer`", Value: "unsafe.Pointer"}},
 									},
 								},
 							}},
@@ -1373,40 +1366,40 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        452,
+			Line:        444,
 			Name:        "uselessLocalConst",
 			MatcherName: "m",
 			DocTags:     []string{"diagnostic"},
 			DocSummary:  "Detects useless local constants",
 			Rules: []ir.Rule{{
-				Line: 453,
+				Line: 445,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 453, Value: "const $x = $_; $*body"},
-					{Line: 453, Value: "const $x $_ = $_; $*body"},
+					{Line: 445, Value: "const $x = $_; $*body"},
+					{Line: 445, Value: "const $x $_ = $_; $*body"},
 				},
 				ReportTemplate: "useless local constant",
 				WhereExpr: ir.FilterExpr{
-					Line: 454,
+					Line: 446,
 					Op:   ir.FilterAndOp,
 					Src:  "!m[\"x\"].Object.IsGlobal() && !m[\"body\"].Contains(`$x`)",
 					Args: []ir.FilterExpr{
 						{
-							Line: 454,
+							Line: 446,
 							Op:   ir.FilterNotOp,
 							Src:  "!m[\"x\"].Object.IsGlobal()",
 							Args: []ir.FilterExpr{{
-								Line:  454,
+								Line:  446,
 								Op:    ir.FilterVarObjectIsGlobalOp,
 								Src:   "m[\"x\"].Object.IsGlobal()",
 								Value: "x",
 							}},
 						},
 						{
-							Line: 454,
+							Line: 446,
 							Op:   ir.FilterNotOp,
 							Src:  "!m[\"body\"].Contains(`$x`)",
 							Args: []ir.FilterExpr{{
-								Line:  454,
+								Line:  446,
 								Op:    ir.FilterVarContainsOp,
 								Src:   "m[\"body\"].Contains(`$x`)",
 								Value: "body",
@@ -1418,97 +1411,97 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        460,
+			Line:        452,
 			Name:        "oneLineReturn",
 			MatcherName: "m",
 			DocTags:     []string{"style"},
 			DocSummary:  "Detects variables assigment before return that can be simplified",
 			Rules: []ir.Rule{{
-				Line: 467,
+				Line: 459,
 				SyntaxPatterns: []ir.PatternString{
-					{Line: 468, Value: "var $x = $v; return $x"},
-					{Line: 469, Value: "$x := $v; return $x"},
+					{Line: 460, Value: "var $x = $v; return $x"},
+					{Line: 461, Value: "$x := $v; return $x"},
 				},
 				ReportTemplate:  "suggestion: return $v",
 				SuggestTemplate: "return $v",
 				WhereExpr: ir.FilterExpr{
-					Line: 471,
+					Line: 463,
 					Op:   ir.FilterNotOp,
 					Src:  "!isPointer(m[\"x\"])",
 					Args: []ir.FilterExpr{{
-						Line: 471,
+						Line: 463,
 						Op:   ir.FilterOrOp,
 						Src:  "isPointer(m[\"x\"])",
 						Args: []ir.FilterExpr{
 							{
-								Line: 471,
+								Line: 463,
 								Op:   ir.FilterOrOp,
 								Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"interface{$*_}\") ||\n\n\tm[\"x\"].Type.Underlying().Is(`func($*_) $*_`)",
 								Args: []ir.FilterExpr{
 									{
-										Line: 471,
+										Line: 463,
 										Op:   ir.FilterOrOp,
 										Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"interface{$*_}\")",
 										Args: []ir.FilterExpr{
 											{
-												Line: 471,
+												Line: 463,
 												Op:   ir.FilterOrOp,
 												Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"map[$_]$_\")",
 												Args: []ir.FilterExpr{
 													{
-														Line: 471,
+														Line: 463,
 														Op:   ir.FilterOrOp,
 														Src:  "m[\"x\"].Type.Underlying().Is(\"*$_\") ||\n\n\tm[\"x\"].Type.Underlying().Is(\"chan $_\")",
 														Args: []ir.FilterExpr{
 															{
-																Line:  471,
+																Line:  463,
 																Op:    ir.FilterVarTypeUnderlyingIsOp,
 																Src:   "m[\"x\"].Type.Underlying().Is(\"*$_\")",
 																Value: "x",
-																Args:  []ir.FilterExpr{{Line: 462, Op: ir.FilterStringOp, Src: "\"*$_\"", Value: "*$_"}},
+																Args:  []ir.FilterExpr{{Line: 454, Op: ir.FilterStringOp, Src: "\"*$_\"", Value: "*$_"}},
 															},
 															{
-																Line:  471,
+																Line:  463,
 																Op:    ir.FilterVarTypeUnderlyingIsOp,
 																Src:   "m[\"x\"].Type.Underlying().Is(\"chan $_\")",
 																Value: "x",
-																Args:  []ir.FilterExpr{{Line: 462, Op: ir.FilterStringOp, Src: "\"chan $_\"", Value: "chan $_"}},
+																Args:  []ir.FilterExpr{{Line: 454, Op: ir.FilterStringOp, Src: "\"chan $_\"", Value: "chan $_"}},
 															},
 														},
 													},
 													{
-														Line:  471,
+														Line:  463,
 														Op:    ir.FilterVarTypeUnderlyingIsOp,
 														Src:   "m[\"x\"].Type.Underlying().Is(\"map[$_]$_\")",
 														Value: "x",
-														Args:  []ir.FilterExpr{{Line: 463, Op: ir.FilterStringOp, Src: "\"map[$_]$_\"", Value: "map[$_]$_"}},
+														Args:  []ir.FilterExpr{{Line: 455, Op: ir.FilterStringOp, Src: "\"map[$_]$_\"", Value: "map[$_]$_"}},
 													},
 												},
 											},
 											{
-												Line:  471,
+												Line:  463,
 												Op:    ir.FilterVarTypeUnderlyingIsOp,
 												Src:   "m[\"x\"].Type.Underlying().Is(\"interface{$*_}\")",
 												Value: "x",
-												Args:  []ir.FilterExpr{{Line: 463, Op: ir.FilterStringOp, Src: "\"interface{$*_}\"", Value: "interface{$*_}"}},
+												Args:  []ir.FilterExpr{{Line: 455, Op: ir.FilterStringOp, Src: "\"interface{$*_}\"", Value: "interface{$*_}"}},
 											},
 										},
 									},
 									{
-										Line:  471,
+										Line:  463,
 										Op:    ir.FilterVarTypeUnderlyingIsOp,
 										Src:   "m[\"x\"].Type.Underlying().Is(`func($*_) $*_`)",
 										Value: "x",
-										Args:  []ir.FilterExpr{{Line: 464, Op: ir.FilterStringOp, Src: "`func($*_) $*_`", Value: "func($*_) $*_"}},
+										Args:  []ir.FilterExpr{{Line: 456, Op: ir.FilterStringOp, Src: "`func($*_) $*_`", Value: "func($*_) $*_"}},
 									},
 								},
 							},
 							{
-								Line:  471,
+								Line:  463,
 								Op:    ir.FilterVarTypeUnderlyingIsOp,
 								Src:   "m[\"x\"].Type.Underlying().Is(`unsafe.Pointer`)",
 								Value: "x",
-								Args:  []ir.FilterExpr{{Line: 464, Op: ir.FilterStringOp, Src: "`unsafe.Pointer`", Value: "unsafe.Pointer"}},
+								Args:  []ir.FilterExpr{{Line: 456, Op: ir.FilterStringOp, Src: "`unsafe.Pointer`", Value: "unsafe.Pointer"}},
 							},
 						},
 					}},
@@ -1516,7 +1509,7 @@ var PrecompiledRules = &ir.File{
 			}},
 		},
 		{
-			Line:        479,
+			Line:        471,
 			Name:        "simplifyTimeComparison",
 			MatcherName: "m",
 			DocTags:     []string{"style"},
@@ -1525,55 +1518,55 @@ var PrecompiledRules = &ir.File{
 			DocAfter:    "t.After(tt)",
 			Rules: []ir.Rule{
 				{
-					Line:            484,
-					SyntaxPatterns:  []ir.PatternString{{Line: 484, Value: "!$t.Before($tt)"}},
+					Line:            476,
+					SyntaxPatterns:  []ir.PatternString{{Line: 476, Value: "!$t.Before($tt)"}},
 					ReportTemplate:  "suggestion: $t.After($tt)",
 					SuggestTemplate: "$t.After($tt)",
 					WhereExpr: ir.FilterExpr{
-						Line: 485,
+						Line: 477,
 						Op:   ir.FilterOrOp,
 						Src:  "isTime(m[\"t\"])",
 						Args: []ir.FilterExpr{
 							{
-								Line:  485,
+								Line:  477,
 								Op:    ir.FilterVarTypeIsOp,
 								Src:   "m[\"t\"].Type.Is(`time.Time`)",
 								Value: "t",
-								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
+								Args:  []ir.FilterExpr{{Line: 473, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
 							},
 							{
-								Line:  485,
+								Line:  477,
 								Op:    ir.FilterVarTypeIsOp,
 								Src:   "m[\"t\"].Type.Is(`*time.Time`)",
 								Value: "t",
-								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
+								Args:  []ir.FilterExpr{{Line: 473, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
 							},
 						},
 					},
 				},
 				{
-					Line:            488,
-					SyntaxPatterns:  []ir.PatternString{{Line: 488, Value: "!$t.After($tt)"}},
+					Line:            480,
+					SyntaxPatterns:  []ir.PatternString{{Line: 480, Value: "!$t.After($tt)"}},
 					ReportTemplate:  "suggestion: $t.Before($tt)",
 					SuggestTemplate: "$t.Before($tt)",
 					WhereExpr: ir.FilterExpr{
-						Line: 489,
+						Line: 481,
 						Op:   ir.FilterOrOp,
 						Src:  "isTime(m[\"t\"])",
 						Args: []ir.FilterExpr{
 							{
-								Line:  489,
+								Line:  481,
 								Op:    ir.FilterVarTypeIsOp,
 								Src:   "m[\"t\"].Type.Is(`time.Time`)",
 								Value: "t",
-								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
+								Args:  []ir.FilterExpr{{Line: 473, Op: ir.FilterStringOp, Src: "`time.Time`", Value: "time.Time"}},
 							},
 							{
-								Line:  489,
+								Line:  481,
 								Op:    ir.FilterVarTypeIsOp,
 								Src:   "m[\"t\"].Type.Is(`*time.Time`)",
 								Value: "t",
-								Args:  []ir.FilterExpr{{Line: 481, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
+								Args:  []ir.FilterExpr{{Line: 473, Op: ir.FilterStringOp, Src: "`*time.Time`", Value: "*time.Time"}},
 							},
 						},
 					},

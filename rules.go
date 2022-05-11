@@ -95,7 +95,7 @@ func camelCaseNaming(m dsl.Matcher) {
 		`var $x = $_`,
 		`var $x $_ = $_`,
 	).
-		Where(!m["x"].Text.Matches(`^_$`) && (m["x"].Text.Matches(`-`) || m["x"].Text.Matches(`_`))).
+		Where(!m["x"].Text.Matches(`^_$`) && (m["x"].Text.Matches(`-|_`))).
 		Report("use camelCase naming strategy").
 		At(m["x"])
 }
@@ -315,24 +315,16 @@ func regexpCompileInLoop(m dsl.Matcher) {
 		`for $_ = range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 		`for range $_ { $*_; $*_ := regexp.$method($s, $*args); $*_ }`,
 
-		`for $*_; $*_; $*_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_, $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_, $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_ := range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_ = range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-		`for range $_ { $*_; var $*_ = regexp.$method($s, $*args); $*_ }`,
-
-		`for $*_; $*_; $*_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_, $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_, $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_ := range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for $_ = range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
-		`for range $_ { $*_; var $*_ $_ = regexp.$method($s, $*args); $*_ }`,
+		`for $*_; $*_; $*_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ := range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_, $_ = range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ := range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for $_ = range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
+		`for range $_ { $*_; var $*_ $*_ = regexp.$method($s, $*args); $*_ }`,
 	).
 		At(m["s"]).
-		Where(m["s"].Const && m["method"].Text.Matches(`Compile|MustCompilePOSIX|CompilePOSIX|Match|MatchString|MatchReader|MustCompile`)).
+		Where(m["s"].Const && !m["method"].Contains(`QuoteMeta`)).
 		Report(`don't compile regex in the loop, move it outside of the loop`)
 }
 
