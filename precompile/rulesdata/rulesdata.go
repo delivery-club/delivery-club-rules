@@ -18,8 +18,11 @@ var PrecompiledRules = &ir.File{
 			DocBefore:   "fmt.Sprintf(\"42\")",
 			DocAfter:    "fmt.Sprint(\"42\")",
 			Rules: []ir.Rule{{
-				Line:           16,
-				SyntaxPatterns: []ir.PatternString{{Line: 16, Value: "fmt.Sprintf($_)"}},
+				Line: 16,
+				SyntaxPatterns: []ir.PatternString{
+					{Line: 16, Value: "fmt.Sprintf($_)"},
+					{Line: 16, Value: "fmt.Errorf($_)"},
+				},
 				ReportTemplate: "use function alternative without formatting",
 			}},
 		},
