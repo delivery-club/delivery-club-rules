@@ -13,7 +13,7 @@ var Bundle = dsl.Bundle{}
 //doc:before    fmt.Sprintf("42")
 //doc:after     fmt.Sprint("42")
 func unusedFormatting(m dsl.Matcher) {
-	m.Match(`fmt.Sprintf($_)`).
+	m.Match(`fmt.Sprintf($_)`, `fmt.Errorf($_)`).
 		Report(`use function alternative without formatting`)
 }
 
@@ -480,4 +480,13 @@ func simplifyTimeComparison(m dsl.Matcher) {
 	m.Match(`!$t.After($tt)`).
 		Where(isTime(m["t"])).
 		Suggest("$t.Before($tt)")
+}
+
+//doc:tags style
+func globalErrorsWithStack(m dsl.Matcher) {
+	m.Import("github.com/pkg/errors")
+
+	m.Match(`var $err $*_ = errors.New($*_)`).
+		Where(m["err"].Type.Implements(`error`) && m["err"].Object.IsGlobal()).
+		Report(`don't use stack for global errors`)
 }
