@@ -379,7 +379,7 @@ func unstoppedTimer(m dsl.Matcher) {
 }
 
 //doc:summary   Detects unreleased ticker
-//doc:tags      performance diagnostic
+//doc:tags      diagnostic
 //doc:before    ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }
 //doc:after     ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }
 func unstoppedTicker(m dsl.Matcher) {
@@ -448,7 +448,7 @@ func uselessLocalConst(m dsl.Matcher) {
 }
 
 //doc:summary   Detects variables assigment before return that can be simplified
-//doc:tags      style
+//doc:tags      style experimental
 func oneLineReturn(m dsl.Matcher) {
 	isPointer := func(x dsl.Var) bool {
 		return x.Type.Underlying().Is("*$_") || x.Type.Underlying().Is("chan $_") ||

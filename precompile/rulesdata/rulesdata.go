@@ -911,7 +911,7 @@ var PrecompiledRules = &ir.File{
 			Line:        385,
 			Name:        "unstoppedTicker",
 			MatcherName: "m",
-			DocTags:     []string{"performance", "diagnostic"},
+			DocTags:     []string{"diagnostic"},
 			DocSummary:  "Detects unreleased ticker",
 			DocBefore:   "ticker := time.NewTicker(time.Second); select { case <-ticker.C: return nil; default: return nil }",
 			DocAfter:    "ticker := time.NewTicker(time.Second); defer ticker.Stop(); select { case <-ticker.C: return nil; default: return nil }",
@@ -1408,7 +1408,7 @@ var PrecompiledRules = &ir.File{
 			Line:        452,
 			Name:        "oneLineReturn",
 			MatcherName: "m",
-			DocTags:     []string{"style"},
+			DocTags:     []string{"style", "experimental"},
 			DocSummary:  "Detects variables assigment before return that can be simplified",
 			Rules: []ir.Rule{{
 				Line: 459,
